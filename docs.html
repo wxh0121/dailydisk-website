@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DailyDisk 用户文档</title>
+<meta name="description" content="DailyDisk 的安装、首次设置、日常使用、报告解读、隐私、命令行与卸载说明。">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/icon-128.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Noto+Serif+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky table of contents on the left, one reading column (~68ch) on the right; same dark palette as the landing page. */
+:root {
+  color-scheme: dark;
+  --bg: #07080a;
+  --bg-raised: #0f1115;
+  --line: rgba(237, 235, 230, 0.1);
+  --line-strong: rgba(237, 235, 230, 0.2);
+  --ink: #edebe6;
+  --ink-2: #b3b1ab;
+  --ink-3: #75746f;
+  --limb: #7d9bff;
+  --warn: #fbb53a;
+  --btn-ink: #0b0c0e;
+  --serif: "Newsreader", "Noto Serif SC", "Songti SC", Georgia, serif;
+  --serif-zh: "Noto Serif SC", "Songti SC", "STSong", "Newsreader", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: "SF Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.8 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--limb); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--limb); outline-offset: 3px; border-radius: 6px; }
+.nav { position: sticky; top: 0; z-index: 20; padding-top: env(safe-area-inset-top, 0px); background: rgba(7, 8, 10, 0.78); backdrop-filter: saturate(160%) blur(18px); -webkit-backdrop-filter: saturate(160%) blur(18px); border-bottom: 1px solid var(--line); }
+.nav .in { max-width: 1240px; margin-inline: auto; padding-inline: var(--gutter); display: flex; align-items: center; gap: 16px; height: 56px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 500 17px/1 var(--serif); }
+.brand img { width: 26px; height: 26px; border-radius: 22.5%; }
+.brand span { color: var(--ink-3); font: 400 13px/1 var(--sans); letter-spacing: 0.1em; margin-left: 4px; }
+.nav .links { margin-left: auto; display: flex; gap: 10px; }
+.btn { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; font: 500 13px/1 var(--sans); text-decoration: none; border: 1px solid var(--line-strong); color: var(--ink); white-space: nowrap; }
+.btn:hover { border-color: var(--ink); }
+.btn.solid { background: var(--ink); color: var(--btn-ink); border-color: var(--ink); }
+
+.layout { max-width: 1240px; margin-inline: auto; padding-inline: var(--gutter); display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); padding-block: 56px 120px; }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 88px); align-self: start; max-height: calc(100vh - 120px); overflow: auto; }
+.toc p { font: 500 11px/1.4 var(--mono); letter-spacing: 0.2em; color: var(--ink-3); margin: 0 0 14px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 5px 0 5px 16px; margin-left: -1px; border-left: 1px solid transparent; color: var(--ink-3); text-decoration: none; font-size: 14px; line-height: 1.5; transition: color 0.2s, border-color 0.2s; }
+.toc a:hover { color: var(--ink); }
+.toc a.on { color: var(--ink); border-left-color: var(--limb); }
+
+article { min-width: 0; max-width: 68ch; }
+.intro { padding-bottom: 36px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.intro .eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: 0.22em; color: var(--ink-3); }
+h1 { font: 300 clamp(36px, 5vw, 56px)/1.2 var(--serif-zh); letter-spacing: 0.05em; margin: 14px 0 18px; text-wrap: balance; }
+.intro p { color: var(--ink-2); font-size: 17px; }
+h2 { font: 400 clamp(24px, 3vw, 30px)/1.35 var(--serif-zh); letter-spacing: 0.05em; margin: 72px 0 18px; text-wrap: balance; }
+h3 { font: 500 17px/1.5 var(--sans); margin: 34px 0 10px; }
+p, li { color: var(--ink-2); }
+p { margin: 0 0 14px; }
+strong { color: var(--ink); font-weight: 500; }
+ul, ol.list { padding-left: 1.3em; margin: 0 0 16px; display: grid; gap: 6px; }
+ol.steps { list-style: none; padding: 0; margin: 0 0 16px; counter-reset: s; display: grid; gap: 14px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; }
+ol.steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line-strong); display: grid; place-items: center; font: 500 12px/1 var(--mono); color: var(--ink); margin-top: 2px; }
+code { font: 400 0.88em/1 var(--mono); color: var(--ink); background: rgba(237, 235, 230, 0.07); padding: 0.18em 0.42em; border-radius: 5px; overflow-wrap: anywhere; }
+.ui { font-family: var(--sans); background: rgba(125, 155, 255, 0.12); color: #c9d5ff; padding: 0.1em 0.45em; border-radius: 5px; white-space: nowrap; }
+.code { position: relative; margin: 0 0 18px; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 12px; }
+.code pre { margin: 0; padding: 16px 18px; overflow-x: auto; font: 400 13px/1.8 var(--mono); color: var(--ink); }
+.code pre .c { color: var(--ink-3); }
+.code button { position: absolute; top: 8px; right: 8px; height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--ink-2); font: 500 12px/1 var(--sans); cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+.code:hover button, .code button:focus-visible { opacity: 1; }
+.note { border: 1px solid var(--line); border-left: 2px solid var(--warn); border-radius: 10px; padding: 14px 18px; margin: 0 0 18px; background: rgba(251, 181, 58, 0.04); }
+.note p:last-child { margin: 0; }
+.tbl { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px/1.4 var(--mono); letter-spacing: 0.08em; color: var(--ink-3); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; }
+td { color: var(--ink-2); }
+.eq { font: 400 18px/1.7 var(--serif-zh); color: var(--ink); padding: 16px 20px; border: 1px solid var(--line); border-radius: 12px; margin: 0 0 18px; }
+.pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--line); font-size: 14px; }
+.pager a { text-decoration: none; color: var(--ink-2); }
+.pager a:hover { color: var(--ink); }
+footer { border-top: 1px solid var(--line); padding-block: 26px calc(26px + env(safe-area-inset-bottom, 0px)); font-size: 13px; color: var(--ink-3); }
+footer .in { max-width: 1240px; margin-inline: auto; padding-inline: var(--gutter); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer a { color: var(--ink-2); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
+  .toc { position: relative; top: 0; max-height: none; border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 12px; }
+  .toc ol { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; }
+  .toc a { padding-left: 0; border-left: 0; }
+  .nav .links .btn:not(.solid) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="in">
+    <a class="brand" href="index.html"><img src="assets/icon-128.png" alt="">DailyDisk<span>用户文档</span></a>
+    <div class="links">
+      <a class="btn" href="index.html">返回首页</a>
+      <a class="btn solid" href="https://github.com/Nu1sance/DailyDisk" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="目录">
+    <p>目录</p>
+    <ol id="toc">
+      <li><a href="#overview">概述</a></li>
+      <li><a href="#requirements">系统要求</a></li>
+      <li><a href="#install">安装</a></li>
+      <li><a href="#setup">首次设置</a></li>
+      <li><a href="#daily">日常使用</a></li>
+      <li><a href="#reports">读懂报告</a></li>
+      <li><a href="#privacy">隐私与数据</a></li>
+      <li><a href="#cli">命令行</a></li>
+      <li><a href="#update">更新</a></li>
+      <li><a href="#uninstall">卸载</a></li>
+      <li><a href="#limits">已知限制</a></li>
+      <li><a href="#trouble">疑难排查</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <div class="intro">
+      <span class="eyebrow">DAILYDISK · 用户文档</span>
+      <h1>安装、设置与日常使用</h1>
+      <p>这份文档覆盖从构建安装到读懂报告的完整流程。更底层的架构、数据库与记账细节，见仓库中的 <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">Docs 目录</a>。</p>
+    </div>
+
+    <h2 id="overview">概述</h2>
+    <p>DailyDisk 是一款以图形界面为主、从源码构建的 macOS 磁盘增长监视器。它把当前内置 APFS 磁盘的清单与上一次的状态比较，把文件增长归到具体路径，记录带符号的对账修正；当 APFS 的物理差异无法安全归属到某个路径时，就单独记录。</p>
+    <p>它监视的范围包括：</p>
+    <ul>
+      <li>内置 APFS 容器，以及其中 System、Data、VM、Preboot、Recovery、Update 各角色的卷</li>
+      <li><code>/System/Volumes/Data</code>，作为启动盘上唯一的完整清点根</li>
+      <li>来自 FSEvents 持久日志的历史文件变化</li>
+      <li>新增、删除、移动、硬链接和尺寸变化的文件</li>
+      <li>至少每七个滚动日一次的完整对账</li>
+      <li>APFS 快照成员关系和容器容量</li>
+      <li>已删除但仍被进程打开的文件</li>
+      <li>DailyDisk 自身的数据库、报告和日志开销</li>
+    </ul>
+    <p>密封的系统卷和其他不做清点的角色，仍以卷级指标显示。外置、可移除、网络和磁盘映像存储默认不纳入。</p>
+
+    <h2 id="requirements">系统要求</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>项目</th><th>要求</th></tr></thead>
+      <tbody>
+        <tr><td>系统</td><td>macOS 15 或更高，内置 APFS 启动盘</td></tr>
+        <tr><td>构建工具</td><td>Apple 命令行工具（或完整 Xcode），提供 Swift 6+ 与 macOS 15+ SDK。全新的 Mac 通常没有预装。</td></tr>
+        <tr><td>网络</td><td>首次克隆和解析 SwiftPM 依赖时需要联网；安装后的监视器不发出应用网络请求。</td></tr>
+        <tr><td>签名</td><td>试用可以用临时签名；长期安装需要一个稳定的本地代码签名身份。</td></tr>
+        <tr><td>权限</td><td>需要手动授予「完全磁盘访问权限」。</td></tr>
+        <tr><td>不需要</td><td>Homebrew、Python、Node.js、Docker 或独立的数据库服务器</td></tr>
+      </tbody>
+    </table></div>
+    <p>本地端到端验证在 Apple Silicon 上完成。Intel 机型和全新 Mac 上的安装尚未完整验证；构建脚本默认只为当前架构编译。</p>
+
+    <h2 id="install">安装</h2>
+    <p>DailyDisk 目前以源码形式发布，不是经过公证、下载即用的安装包。构建脚本会编译三个可执行文件、打包资源、签名、校验并安装到 <code>~/Applications</code>。</p>
+
+    <h3>1. 安装并检查开发者工具</h3>
+    <div class="code"><button type="button">复制</button><pre>xcode-select --install</pre></div>
+    <p>安装完成后，打开新的终端窗口检查：</p>
+    <div class="code"><button type="button">复制</button><pre>swift --version
+xcrun --sdk macosx --show-sdk-version
+git --version</pre></div>
+
+    <h3>2. 获取源码</h3>
+    <div class="code"><button type="button">复制</button><pre>git clone https://github.com/Nu1sance/DailyDisk.git
+cd DailyDisk</pre></div>
+    <p>之后的命令都在这个目录里运行。也可以直接 <a href="https://github.com/Nu1sance/DailyDisk/archive/refs/heads/main.zip">下载源码 ZIP</a> 解压使用。首次构建会自动拉取依赖，耗时比之后长。</p>
+
+    <h3>3a. 一次性试用（临时签名）</h3>
+    <div class="code"><button type="button">复制</button><pre>ALLOW_ADHOC_SIGNING=1 Scripts/build-app.sh --install
+open "$HOME/Applications/DailyDisk.app"</pre></div>
+    <div class="note"><p><strong>临时签名只适合试用。</strong>替换构建后，已授予的「完全磁盘访问权限」或通知权限可能失效，需要重新授权。</p></div>
+
+    <h3>3b. 长期安装（使用你自己的签名身份）</h3>
+    <p>先列出钥匙串中有效的代码签名身份。一个身份包括证书和它的私钥；构建脚本不会替你创建。</p>
+    <div class="code"><button type="button">复制</button><pre>security find-identity -v -p codesigning</pre></div>
+    <p>使用 Apple 开发身份：</p>
+    <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="Apple Development: Your Name (TEAMID)" \
+  Scripts/build-app.sh --install
+open "$HOME/Applications/DailyDisk.app"</pre></div>
+    <p>使用在「钥匙串访问」中自建的本地代码签名身份时，可以关闭 Apple 安全时间戳请求：</p>
+    <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="DailyDisk Local Signing" CODE_SIGN_TIMESTAMP=none \
+  Scripts/build-app.sh --install</pre></div>
+    <p>上面的身份名称只是示例，请换成 <code>security find-identity</code> 列出的名称。之后每次更新都保持同一个身份、默认的 Bundle ID 和 <code>~/Applications/DailyDisk.app</code> 安装路径。私钥只留在你的 Mac 上，不要提交到仓库。</p>
+
+    <h2 id="setup">首次设置</h2>
+    <ol class="steps">
+      <li><div>打开已安装的 App。<span class="ui">概览</span> 页会根据当前设置状态只显示一个主要操作。</div></li>
+      <li><div>如果出现 <span class="ui">允许读取磁盘</span>，在 <strong>系统设置 → 隐私与安全性 → 完全磁盘访问权限</strong> 中启用 <code>~/Applications/DailyDisk.app</code>。授权后退出并重新打开 App。</div></li>
+      <li><div>点击 <span class="ui">启用每日检查</span>。这会启用后台助手并立即开始一次检查。如果 macOS 需要批准，主按钮会变成 <span class="ui">允许后台检查</span>，并打开「登录项与扩展」。</div></li>
+      <li><div>启用后，用 <span class="ui">开始首次检查</span> 或 <span class="ui">立即检查</span>。首次检查建立基线，是期初余额；文件增长的比较从下一次成功检查开始。</div></li>
+      <li><div>通知是可选的，在 <span class="ui">设置 → 通用</span> 中开启。拒绝通知不影响报告保存。</div></li>
+    </ol>
+
+    <h2 id="daily">日常使用</h2>
+    <h3>自动运行</h3>
+    <p>内置的用户级 LaunchAgent 每天当地时间 09:00 运行，登录时也会检查是否有到期的检查。错过的运行会合并为一次；成功执行后进程退出，不常驻。App 窗口不需要保持打开。</p>
+    <p>关机或未登录的 Mac 无法在 09:00 运行这个用户任务；补查取决于下一次登录或唤醒。DailyDisk 本身不负责开机或唤醒。</p>
+    <h3>立即检查</h3>
+    <p>在 <span class="ui">概览</span> 点 <span class="ui">立即检查</span>，即使今天的定时报告已经存在也会运行，但仍遵循首次、增量、每周和恢复策略。检查过程中显示阶段、真实计数、已用时间和上次进度更新的时间，不会编造百分比。</p>
+    <h3>关闭窗口与取消</h3>
+    <ul>
+      <li>检查在后台助手中进行，可以随时关闭窗口；重新打开后会自动接上进度。</li>
+      <li>在开始保存之前可以点 <span class="ui">取消检查</span>，之前的基线会保留。保存阶段会提示「正在保存结果，请稍候。此阶段不可取消。」</li>
+      <li>如果助手意外停止，App 会给出可操作的中断提示，用 <span class="ui">重试检查</span> 重新开始，而不是一直转圈。</li>
+      <li>需要强制完整清点时，使用 <span class="ui">设置 → 通用 → 重新完整检查磁盘</span>。</li>
+    </ul>
+    <h3>完整对账的时机</h3>
+    <p>距上次完整清点满 168 小时（七个滚动日）时做一次完整对账。事件日志丢失或被替换、拓扑变化或清单漂移，会提前触发恢复性的完整扫描，所以不是每次例行检查都能走增量。</p>
+
+    <h2 id="reports">读懂报告</h2>
+    <p><span class="ui">概览</span> 显示最近一次的磁盘变化和主要增长来源。<span class="ui">历史</span> 可以按日期、运行和域选择报告，查看记账、覆盖范围、物理诊断、排名和错误。记账与诊断默认折叠。</p>
+    <p>磁盘的物理变化由三部分组成，分开记录：</p>
+    <p class="eq">物理变化 = 净文件变化 + 未归属的 APFS 差异 + DailyDisk 自身开销</p>
+    <div class="tbl"><table>
+      <thead><tr><th>字段</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td><code>eventAttributedDelta</code></td><td>由文件事件归属到路径的变化</td></tr>
+        <tr><td><code>reconciliationCorrection</code></td><td>完整对账产生的带符号修正</td></tr>
+        <tr><td><code>reconciledIndexedDelta</code></td><td>对账后的索引净变化</td></tr>
+        <tr><td><code>dailyDiskOverheadDelta</code></td><td>DailyDisk 自身数据的变化</td></tr>
+        <tr><td><code>physicalUsedDelta</code></td><td>APFS 报告的物理已用空间变化</td></tr>
+        <tr><td><code>physicalUnattributedDelta</code></td><td>无法安全归属到路径的物理差异</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>修正值的正负：</strong>正值表示完整扫描发现了增量维护漏掉的已分配字节；负值表示增量索引保留了实际已不存在的字节。未归属的物理空间不会被硬塞进一个虚构的目录。</p>
+    <h3>环形图</h3>
+    <p>概览和报告详情会为最多五个互不重叠的正向条目画出环形图。计算百分比前会排除祖先目录和重复路径；分母只是图中显示的这几项，不是全部文件增长，也不是磁盘的物理变化。负向变化和未归属的 APFS 空间不会成为扇区。</p>
+    <p>报告以成对的 JSON 和 Markdown 原子写入：</p>
+    <div class="code"><button type="button">复制</button><pre>~/Library/Application Support/DailyDisk/Reports/&lt;run-uuid&gt;/</pre></div>
+
+    <h2 id="privacy">隐私与数据</h2>
+    <p>DailyDisk 只在本地保存数据：</p>
+    <div class="code"><button type="button">复制</button><pre>~/Library/Application Support/DailyDisk/DailyDisk.sqlite
+~/Library/Application Support/DailyDisk/Reports/
+~/Library/Application Support/DailyDisk/Logs/
+~/Library/Application Support/DailyDisk/AlertState.json
+~/Library/Application Support/DailyDisk/Control/</pre></div>
+    <ul>
+      <li>没有遥测，不用云存储，不需要 root helper、sudo 或 LaunchDaemon。</li>
+      <li>界面默认隐藏路径；显示路径只在当前会话有效，导出完整 JSON 需要二次确认。</li>
+      <li>通知只包含总字节数，从不包含完整路径。运行日志对敏感字符串做哈希。</li>
+      <li>进度与控制文件只包含阶段、ID、时间和计数，不含路径或任意命令。</li>
+    </ul>
+
+    <h2 id="cli">命令行</h2>
+    <p>日常的扫描、历史、报告、健康检查和重置都能在 App 里完成。<code>dailydiskctl</code> 用于自动化、严格只读的检查、机器可读的退出码和专家排障。已安装的副本位于：</p>
+    <div class="code"><button type="button">复制</button><pre>"$HOME/Applications/DailyDisk.app/Contents/Helpers/dailydiskctl" status</pre></div>
+    <p>常用子命令：</p>
+    <div class="code"><button type="button">复制</button><pre>dailydiskctl status
+dailydiskctl history --limit 14
+dailydiskctl report
+dailydiskctl verify
+dailydiskctl diagnostics</pre></div>
+    <p>默认不输出路径。需要路径排名或可还原的 JSON 时，必须显式同意：</p>
+    <div class="code"><button type="button">复制</button><pre>dailydiskctl report --include-paths
+dailydiskctl report --include-paths --json</pre></div>
+
+    <h2 id="update">更新</h2>
+    <p>拉取新版本后，用<strong>相同的签名变量</strong>加 <code>--install</code> 重新构建，然后退出并重新打开 App 以载入新版本。避免在扫描进行中替换助手。目前没有自动更新。</p>
+    <div class="code"><button type="button">复制</button><pre>git pull
+CODE_SIGN_IDENTITY="你的签名身份" Scripts/build-app.sh --install</pre></div>
+
+    <h2 id="uninstall">卸载</h2>
+    <ol class="steps">
+      <li><div>打开 DailyDisk → <span class="ui">设置</span> → <span class="ui">移除每日任务</span>。</div></li>
+      <li><div>如果要删除本地历史，使用 <span class="ui">设置 → 重置历史与基线</span>。它会注销助手、确认没有写入进程后，只删除 DailyDisk 自己的数据目录。</div></li>
+      <li><div>退出 DailyDisk，删除 <code>~/Applications/DailyDisk.app</code>。</div></li>
+      <li><div>如果系统设置中仍有条目，从「完全磁盘访问权限」和「通知」中移除 DailyDisk。</div></li>
+    </ol>
+
+    <h2 id="limits">已知限制</h2>
+    <ul>
+      <li>完全磁盘访问权限不能绕过 POSIX 权限、ACL、SIP 或签名系统卷。无法读取的子目录会被报告，并沿用上一次的清单，不会被当作删除。</li>
+      <li>FSEvents 是会合并事件的变化日志，不是审计日志。日志丢失或回绕时会触发权威的完整恢复。</li>
+      <li>两次检查之间创建又删除的文件无法还原，除非它们仍通过打开的文件描述符或快照占用空间。</li>
+      <li>APFS 克隆、共享区段、快照、元数据和可清除空间，使逐文件的精确物理占用无法计算；DailyDisk 会明确报告剩余差额。</li>
+      <li>「已删除但仍被打开」的文件大小是逻辑值，不一定等于独占的 APFS 块。</li>
+      <li>快照的大小字段是可选的，不会被盲目相加。</li>
+    </ul>
+
+    <h2 id="trouble">疑难排查</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>现象</th><th>处理</th></tr></thead>
+      <tbody>
+        <tr><td>找不到编译器或 SDK</td><td>安装或更新 Apple 开发者工具，确认 <code>swift --version</code> 为 6 以上、SDK 为 15 以上。</td></tr>
+        <tr><td>依赖拉取失败</td><td>确认能访问 GitHub，然后重试 <code>swift package resolve</code>。</td></tr>
+        <tr><td>没有签名身份</td><td>先用临时签名试用，或按「长期安装」准备本地签名身份。不要关闭签名检查。</td></tr>
+        <tr><td>更新后权限丢失</td><td>确认签名身份、Bundle ID 和安装路径都没有变，再重新授权。</td></tr>
+        <tr><td>完整扫描很慢</td><td>首次基线在约 236 万条路径的 Mac 上用了 23–24 分钟，属于正常范围；耗时受文件数量、改动量和磁盘速度影响。</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="pager">
+      <a href="index.html">← 返回 DailyDisk 首页</a>
+      <a href="https://github.com/Nu1sance/DailyDisk/issues" target="_blank" rel="noopener">在 GitHub 反馈问题 →</a>
+    </div>
+  </article>
+</div>
+
+<footer><div class="in"><span>DailyDisk · MIT License</span><a href="#top" onclick="scrollTo({top:0});return false;">回到顶部 ↑</a></div></footer>
+
+<script>
+(() => {
+  document.querySelectorAll('.code button').forEach(b => b.addEventListener('click', async () => {
+    const pre = b.nextElementSibling;
+    try { await navigator.clipboard.writeText(pre.innerText); b.textContent = '已复制'; }
+    catch { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = '已选中'; }
+    setTimeout(() => b.textContent = '复制', 1600);
+  }));
+  const links = [...document.querySelectorAll('#toc a')], heads = links.map(a => document.querySelector(a.getAttribute('href')));
+  const spy = () => { let i = 0; heads.forEach((h, k) => { if (h.getBoundingClientRect().top < 140) i = k; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) i = heads.length - 1;
+    links.forEach((a, k) => a.classList.toggle('on', k === i)); };
+  addEventListener('scroll', () => requestAnimationFrame(spy), { passive: true }); spy();
+})();
+</script>
+</body>
+</html>
