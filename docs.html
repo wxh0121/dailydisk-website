@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>DailyDisk 用户文档</title>
-<meta name="description" content="DailyDisk 的安装、首次设置、日常使用、报告解读、隐私、命令行与卸载说明。">
+<meta name="description" content="DailyDisk 的安装、首次设置、每日完整检查、报告解读、回收自身占用、隐私、命令行与卸载说明。">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/icon-128.png">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
@@ -123,6 +123,7 @@ footer a { color: var(--ink-2); text-decoration: none; }
       <li><a href="#setup">首次设置</a></li>
       <li><a href="#daily">日常使用</a></li>
       <li><a href="#reports">读懂报告</a></li>
+      <li><a href="#reclaim">回收自身占用</a></li>
       <li><a href="#privacy">隐私与数据</a></li>
       <li><a href="#cli">命令行</a></li>
       <li><a href="#update">更新</a></li>
@@ -136,44 +137,44 @@ footer a { color: var(--ink-2); text-decoration: none; }
     <div class="intro">
       <span class="eyebrow">DAILYDISK · 用户文档</span>
       <h1>安装、设置与日常使用</h1>
-      <p>这份文档覆盖从构建安装到读懂报告的完整流程。更底层的架构、数据库与记账细节，见仓库中的 <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">Docs 目录</a>。</p>
+      <p>从构建安装到读懂报告的完整流程。架构、数据库与记账细节见仓库的 <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">Docs 目录</a>。</p>
     </div>
 
     <h2 id="overview">概述</h2>
-    <p>DailyDisk 是一款以图形界面为主、从源码构建的 macOS 磁盘增长监视器。它把当前内置 APFS 磁盘的清单与上一次的状态比较，把文件增长归到具体路径，记录带符号的对账修正；当 APFS 的物理差异无法安全归属到某个路径时，就单独记录。</p>
-    <p>它监视的范围包括：</p>
+    <p>DailyDisk 是一款以图形界面为主、从源码构建的 macOS 磁盘增长监视器。它每天清晨完整清点一次内置 APFS 磁盘，与上一次的清单比较，把文件变化归到具体路径。无法安全归属的 APFS 物理差异单独记录。</p>
+    <p>监视范围：</p>
     <ul>
-      <li>内置 APFS 容器，以及其中 System、Data、VM、Preboot、Recovery、Update 各角色的卷</li>
-      <li><code>/System/Volumes/Data</code>，作为启动盘上唯一的完整清点根</li>
-      <li>来自 FSEvents 持久日志的历史文件变化</li>
+      <li>内置 APFS 容器，以及 System、Data、VM、Preboot、Recovery、Update 各角色的卷</li>
+      <li><code>/System/Volumes/Data</code>，启动盘上唯一的完整清点范围</li>
+      <li>FSEvents 持久日志中的文件变化</li>
       <li>新增、删除、移动、硬链接和尺寸变化的文件</li>
-      <li>至少每七个滚动日一次的完整对账</li>
-      <li>APFS 快照成员关系和容器容量</li>
-      <li>已删除但仍被进程打开的文件</li>
-      <li>DailyDisk 自身的数据库、报告和日志开销</li>
+      <li>每天一次的完整清点，默认 05:00</li>
+      <li>APFS 快照成员关系与容器容量</li>
+      <li>已删除、仍被进程打开的文件</li>
+      <li>DailyDisk 自身的数据库、报告与日志占用</li>
     </ul>
-    <p>密封的系统卷和其他不做清点的角色，仍以卷级指标显示。外置、可移除、网络和磁盘映像存储默认不纳入。</p>
+    <p>密封的系统卷等不做清点的角色只显示卷级指标。外置、可移除、网络与磁盘映像默认不纳入。</p>
 
     <h2 id="requirements">系统要求</h2>
     <div class="tbl"><table>
       <thead><tr><th>项目</th><th>要求</th></tr></thead>
       <tbody>
         <tr><td>系统</td><td>macOS 15 或更高，内置 APFS 启动盘</td></tr>
-        <tr><td>构建工具</td><td>Apple 命令行工具（或完整 Xcode），提供 Swift 6+ 与 macOS 15+ SDK。全新的 Mac 通常没有预装。</td></tr>
-        <tr><td>网络</td><td>首次克隆和解析 SwiftPM 依赖时需要联网；安装后的监视器不发出应用网络请求。</td></tr>
-        <tr><td>签名</td><td>试用可以用临时签名；长期安装需要一个稳定的本地代码签名身份。</td></tr>
-        <tr><td>权限</td><td>需要手动授予「完全磁盘访问权限」。</td></tr>
-        <tr><td>不需要</td><td>Homebrew、Python、Node.js、Docker 或独立的数据库服务器</td></tr>
+        <tr><td>构建工具</td><td>Apple 命令行工具或完整 Xcode，提供 Swift 6+ 与 macOS 15+ SDK。新 Mac 通常未预装。</td></tr>
+        <tr><td>网络</td><td>首次克隆与解析 SwiftPM 依赖时需要。安装后的监视器不发出网络请求。</td></tr>
+        <tr><td>签名</td><td>试用可用临时签名；长期安装需要稳定的本地代码签名身份。</td></tr>
+        <tr><td>权限</td><td>需手动授予「完全磁盘访问权限」。</td></tr>
+        <tr><td>不需要</td><td>Homebrew、Python、Node.js、Docker 或独立数据库服务</td></tr>
       </tbody>
     </table></div>
-    <p>本地端到端验证在 Apple Silicon 上完成。Intel 机型和全新 Mac 上的安装尚未完整验证；构建脚本默认只为当前架构编译。</p>
+    <p>端到端验证在 Apple Silicon 上完成。Intel 机型与全新 Mac 的安装尚未完整验证；构建脚本只为当前架构编译。</p>
 
     <h2 id="install">安装</h2>
-    <p>DailyDisk 目前以源码形式发布，不是经过公证、下载即用的安装包。构建脚本会编译三个可执行文件、打包资源、签名、校验并安装到 <code>~/Applications</code>。</p>
+    <p>DailyDisk 以源码形式发布，没有公证的安装包。构建脚本会编译三个可执行文件、打包、签名、校验，并安装到 <code>~/Applications</code>。</p>
 
     <h3>1. 安装并检查开发者工具</h3>
     <div class="code"><button type="button">复制</button><pre>xcode-select --install</pre></div>
-    <p>安装完成后，打开新的终端窗口检查：</p>
+    <p>安装完成后，在新的终端窗口中检查：</p>
     <div class="code"><button type="button">复制</button><pre>swift --version
 xcrun --sdk macosx --show-sdk-version
 git --version</pre></div>
@@ -181,87 +182,118 @@ git --version</pre></div>
     <h3>2. 获取源码</h3>
     <div class="code"><button type="button">复制</button><pre>git clone https://github.com/Nu1sance/DailyDisk.git
 cd DailyDisk</pre></div>
-    <p>之后的命令都在这个目录里运行。也可以直接 <a href="https://github.com/Nu1sance/DailyDisk/archive/refs/heads/main.zip">下载源码 ZIP</a> 解压使用。首次构建会自动拉取依赖，耗时比之后长。</p>
+    <p>后续命令都在此目录运行。也可以 <a href="https://github.com/Nu1sance/DailyDisk/archive/refs/heads/main.zip">下载源码 ZIP</a>。首次构建会自动拉取依赖，耗时较长。</p>
 
     <h3>3a. 一次性试用（临时签名）</h3>
     <div class="code"><button type="button">复制</button><pre>ALLOW_ADHOC_SIGNING=1 Scripts/build-app.sh --install
 open "$HOME/Applications/DailyDisk.app"</pre></div>
-    <div class="note"><p><strong>临时签名只适合试用。</strong>替换构建后，已授予的「完全磁盘访问权限」或通知权限可能失效，需要重新授权。</p></div>
+    <div class="note"><p><strong>临时签名仅供试用。</strong>重新构建后，已授予的完全磁盘访问权限或通知权限可能失效。</p></div>
 
-    <h3>3b. 长期安装（使用你自己的签名身份）</h3>
-    <p>先列出钥匙串中有效的代码签名身份。一个身份包括证书和它的私钥；构建脚本不会替你创建。</p>
+    <h3>3b. 长期安装（使用自己的签名身份）</h3>
+    <p>先列出钥匙串中有效的代码签名身份。身份由证书和私钥组成，构建脚本不会代为创建。</p>
     <div class="code"><button type="button">复制</button><pre>security find-identity -v -p codesigning</pre></div>
     <p>使用 Apple 开发身份：</p>
     <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="Apple Development: Your Name (TEAMID)" \
   Scripts/build-app.sh --install
 open "$HOME/Applications/DailyDisk.app"</pre></div>
-    <p>使用在「钥匙串访问」中自建的本地代码签名身份时，可以关闭 Apple 安全时间戳请求：</p>
+    <p>使用在「钥匙串访问」中自建的本地身份时，可关闭 Apple 安全时间戳：</p>
     <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="DailyDisk Local Signing" CODE_SIGN_TIMESTAMP=none \
   Scripts/build-app.sh --install</pre></div>
-    <p>上面的身份名称只是示例，请换成 <code>security find-identity</code> 列出的名称。之后每次更新都保持同一个身份、默认的 Bundle ID 和 <code>~/Applications/DailyDisk.app</code> 安装路径。私钥只留在你的 Mac 上，不要提交到仓库。</p>
+    <p>以上身份名称仅为示例，请换成 <code>security find-identity</code> 列出的名称。之后每次更新保持同一身份、默认 Bundle ID 与 <code>~/Applications/DailyDisk.app</code> 安装路径。私钥只留在本机。</p>
 
     <h2 id="setup">首次设置</h2>
     <ol class="steps">
-      <li><div>打开已安装的 App。<span class="ui">概览</span> 页会根据当前设置状态只显示一个主要操作。</div></li>
-      <li><div>如果出现 <span class="ui">允许读取磁盘</span>，在 <strong>系统设置 → 隐私与安全性 → 完全磁盘访问权限</strong> 中启用 <code>~/Applications/DailyDisk.app</code>。授权后退出并重新打开 App。</div></li>
-      <li><div>点击 <span class="ui">启用每日检查</span>。这会启用后台助手并立即开始一次检查。如果 macOS 需要批准，主按钮会变成 <span class="ui">允许后台检查</span>，并打开「登录项与扩展」。</div></li>
-      <li><div>启用后，用 <span class="ui">开始首次检查</span> 或 <span class="ui">立即检查</span>。首次检查建立基线，是期初余额；文件增长的比较从下一次成功检查开始。</div></li>
-      <li><div>通知是可选的，在 <span class="ui">设置 → 通用</span> 中开启。拒绝通知不影响报告保存。</div></li>
+      <li><div>打开 App。<span class="ui">概览</span> 只显示一个与当前状态相符的主要操作。</div></li>
+      <li><div>如出现 <span class="ui">允许读取磁盘</span>，在 <strong>系统设置 → 隐私与安全性 → 完全磁盘访问权限</strong> 中启用 <code>~/Applications/DailyDisk.app</code>，然后退出并重新打开 App。</div></li>
+      <li><div>点击 <span class="ui">启用每日检查</span>，后台助手随即启用并开始一次检查。如需系统批准，主按钮会变为 <span class="ui">允许后台检查</span>，并打开「登录项与扩展」。</div></li>
+      <li><div>使用 <span class="ui">开始首次检查</span> 或 <span class="ui">立即检查</span>。首次检查建立基线，作为期初余额；增长比较从下一次成功检查开始。</div></li>
+      <li><div>通知可选，在 <span class="ui">设置 → 通用</span> 中开启。拒绝通知不影响报告保存。</div></li>
     </ol>
 
     <h2 id="daily">日常使用</h2>
-    <h3>自动运行</h3>
-    <p>内置的用户级 LaunchAgent 每天当地时间 09:00 运行，登录时也会检查是否有到期的检查。错过的运行会合并为一次；成功执行后进程退出，不常驻。App 窗口不需要保持打开。</p>
-    <p>关机或未登录的 Mac 无法在 09:00 运行这个用户任务；补查取决于下一次登录或唤醒。DailyDisk 本身不负责开机或唤醒。</p>
+    <h3>每日完整检查</h3>
+    <p>后台助手每天当地时间 05:00 完整读取一次文件元数据。登录时也会检查是否有待办；当天已有成功的完整检查，就跳过。运行结束即退出，App 窗口无需保持打开。</p>
+    <p>完整检查只依赖当次扫描。清点期间的改动由 FSEvents 补齐，不需要前一天的日志仍然有效。是否完成以清单实际提交、报告发布的时间为准，延迟发布的昨日结果不算作今天。</p>
+    <p>关机或未登录时任务无法运行，补查取决于下一次登录或唤醒。DailyDisk 不负责开机或唤醒。</p>
+
     <h3>立即检查</h3>
-    <p>在 <span class="ui">概览</span> 点 <span class="ui">立即检查</span>，即使今天的定时报告已经存在也会运行，但仍遵循首次、增量、每周和恢复策略。检查过程中显示阶段、真实计数、已用时间和上次进度更新的时间，不会编造百分比。</p>
+    <p>在 <span class="ui">概览</span> 点击 <span class="ui">立即检查</span>：</p>
+    <ul>
+      <li>当天还没有完整检查时，执行完整检查。</li>
+      <li>当天已完成完整检查后，再次检查会尝试增量；事件日志不可信时自动改为完整检查。</li>
+      <li>已有检查在进行时，直接接入那一次。</li>
+      <li>需要强制完整清点，使用 <span class="ui">设置 → 通用 → 重新完整检查磁盘</span>。</li>
+    </ul>
+    <p>检查过程显示阶段、真实计数、已用时间与上次进度更新时间，不显示估算的百分比。遍历结束后会进入 <span class="ui">正在核对已删除的文件</span> 阶段；如有读不到的目录，还会显示 <span class="ui">正在保留无法读取目录的历史记录</span>。</p>
+
     <h3>关闭窗口与取消</h3>
     <ul>
-      <li>检查在后台助手中进行，可以随时关闭窗口；重新打开后会自动接上进度。</li>
-      <li>在开始保存之前可以点 <span class="ui">取消检查</span>，之前的基线会保留。保存阶段会提示「正在保存结果，请稍候。此阶段不可取消。」</li>
-      <li>如果助手意外停止，App 会给出可操作的中断提示，用 <span class="ui">重试检查</span> 重新开始，而不是一直转圈。</li>
-      <li>需要强制完整清点时，使用 <span class="ui">设置 → 通用 → 重新完整检查磁盘</span>。</li>
+      <li>检查在后台助手中进行，窗口可随时关闭，重新打开后自动接上进度。</li>
+      <li>开始保存前可 <span class="ui">取消检查</span>，之前的基线保留。保存阶段会提示「正在保存结果，请稍候。此阶段不可取消。」</li>
+      <li>失败或取消的检查不计为当天完成。</li>
+      <li>助手意外停止时，App 会给出中断提示，用 <span class="ui">重试检查</span> 重新开始。</li>
     </ul>
-    <h3>完整对账的时机</h3>
-    <p>距上次完整清点满 168 小时（七个滚动日）时做一次完整对账。事件日志丢失或被替换、拓扑变化或清单漂移，会提前触发恢复性的完整扫描，所以不是每次例行检查都能走增量。</p>
+
+    <h3>存储方式</h3>
+    <p>建立基线后，每日完整检查与当前清单逐批比对，只写入发生变化的记录，未变化的文件不重写。变更前的旧值保留 24 小时，用于恢复，过期后在后续运行中清理。</p>
 
     <h2 id="reports">读懂报告</h2>
-    <p><span class="ui">概览</span> 显示最近一次的磁盘变化和主要增长来源。<span class="ui">历史</span> 可以按日期、运行和域选择报告，查看记账、覆盖范围、物理诊断、排名和错误。记账与诊断默认折叠。</p>
-    <p>磁盘的物理变化由三部分组成，分开记录：</p>
+    <p><span class="ui">概览</span> 显示最近一次的磁盘变化、增长来源与趋势。<span class="ui">历史</span> 可按日期、运行和域选择报告，查看记账、覆盖范围、物理诊断、排名与错误；记账与诊断默认折叠。</p>
+
+    <h3>空间构成</h3>
     <p class="eq">物理变化 = 净文件变化 + 未归属的 APFS 差异 + DailyDisk 自身开销</p>
+    <p>「空间构成」卡片按上式展示三项。各项同号时显示比例条；未归属空间的说明在卡片的信息按钮里。</p>
+
+    <h3>增长与释放</h3>
+    <p>概览和报告详情各列出最多五项互不重叠的增长和释放来源。先排除祖先目录与重复路径；每行的条形只相对于列表中最大的一项，不代表全部文件增长或磁盘物理变化。未归属的 APFS 空间不会出现在来源列表中。完整排名，包括重叠的祖先目录、分配字节与逻辑字节，在报告的折叠详情里。</p>
+
+    <h3>趋势与路径</h3>
+    <ul>
+      <li>指针移到概览趋势的某一列，可查看该次报告的时间与带符号的物理变化。增加为蓝色，减少为灰色，选中时变为柔和的黄色。</li>
+      <li>历史工具栏显示当前路径状态：「路径已隐藏」或「路径已显示」。显示路径需确认，仅在当前会话有效；隐藏立即生效。</li>
+    </ul>
+
+    <h3>记账字段</h3>
     <div class="tbl"><table>
       <thead><tr><th>字段</th><th>含义</th></tr></thead>
       <tbody>
         <tr><td><code>eventAttributedDelta</code></td><td>由文件事件归属到路径的变化</td></tr>
-        <tr><td><code>reconciliationCorrection</code></td><td>完整对账产生的带符号修正</td></tr>
-        <tr><td><code>reconciledIndexedDelta</code></td><td>对账后的索引净变化</td></tr>
+        <tr><td><code>reconciliationCorrection</code></td><td>完整检查产生的带符号修正</td></tr>
+        <tr><td><code>reconciledIndexedDelta</code></td><td>修正后的索引净变化</td></tr>
         <tr><td><code>dailyDiskOverheadDelta</code></td><td>DailyDisk 自身数据的变化</td></tr>
         <tr><td><code>physicalUsedDelta</code></td><td>APFS 报告的物理已用空间变化</td></tr>
         <tr><td><code>physicalUnattributedDelta</code></td><td>无法安全归属到路径的物理差异</td></tr>
       </tbody>
     </table></div>
-    <p><strong>修正值的正负：</strong>正值表示完整扫描发现了增量维护漏掉的已分配字节；负值表示增量索引保留了实际已不存在的字节。未归属的物理空间不会被硬塞进一个虚构的目录。</p>
-    <h3>环形图</h3>
-    <p>概览和报告详情会为最多五个互不重叠的正向条目画出环形图。计算百分比前会排除祖先目录和重复路径；分母只是图中显示的这几项，不是全部文件增长，也不是磁盘的物理变化。负向变化和未归属的 APFS 空间不会成为扇区。</p>
-    <p>报告以成对的 JSON 和 Markdown 原子写入：</p>
+    <p>修正值为正，表示完整扫描发现了增量维护漏记的字节；为负，表示索引保留了实际已不存在的字节。</p>
+    <p>报告以 JSON 与 Markdown 成对原子写入：</p>
     <div class="code"><button type="button">复制</button><pre>~/Library/Application Support/DailyDisk/Reports/&lt;run-uuid&gt;/</pre></div>
 
+    <h2 id="reclaim">回收自身占用</h2>
+    <p>数百万文件的清单本身可能占用数 GB。打开 <span class="ui">设置 → 诊断 → 数据占用</span>：</p>
+    <ul>
+      <li><span class="ui">刷新占用</span> 显示当前占用、数据库内可复用的空间和上次维护结果。</li>
+      <li><span class="ui">回收数据库空间</span> 交由后台助手整理数据库。当前基线与历史报告保留，不扫描文件。</li>
+    </ul>
+    <p>回收需要每日任务已安装并获批准，还需要临时空间：约为数据库大小的两倍再加 1 GB，不足时会明确拒绝。维护开始后不可取消，可以关闭窗口等待完成。不要手动删除 SQLite 或 WAL 文件。</p>
+    <p>自动压缩受 1 GB、25% 与七天冷却期限制，不会每天执行。每日检查会复用数据库中的空闲页，频繁压缩反而会让这些空间被重新分配。</p>
+
     <h2 id="privacy">隐私与数据</h2>
-    <p>DailyDisk 只在本地保存数据：</p>
+    <p>数据只保存在本机：</p>
     <div class="code"><button type="button">复制</button><pre>~/Library/Application Support/DailyDisk/DailyDisk.sqlite
 ~/Library/Application Support/DailyDisk/Reports/
 ~/Library/Application Support/DailyDisk/Logs/
 ~/Library/Application Support/DailyDisk/AlertState.json
 ~/Library/Application Support/DailyDisk/Control/</pre></div>
     <ul>
-      <li>没有遥测，不用云存储，不需要 root helper、sudo 或 LaunchDaemon。</li>
-      <li>界面默认隐藏路径；显示路径只在当前会话有效，导出完整 JSON 需要二次确认。</li>
-      <li>通知只包含总字节数，从不包含完整路径。运行日志对敏感字符串做哈希。</li>
-      <li>进度与控制文件只包含阶段、ID、时间和计数，不含路径或任意命令。</li>
+      <li>没有遥测，不用云存储，不需要 root、sudo 或 LaunchDaemon。</li>
+      <li>界面默认隐藏路径；显示路径仅限当前会话，导出完整 JSON 需再次确认。</li>
+      <li>通知只包含总字节数。运行日志中的敏感字符串经过哈希。</li>
+      <li>进度与控制文件只记录阶段、ID、时间和计数，不含路径或命令。</li>
     </ul>
 
     <h2 id="cli">命令行</h2>
-    <p>日常的扫描、历史、报告、健康检查和重置都能在 App 里完成。<code>dailydiskctl</code> 用于自动化、严格只读的检查、机器可读的退出码和专家排障。已安装的副本位于：</p>
+    <p>日常操作都能在 App 中完成。<code>dailydiskctl</code> 用于自动化、严格只读的检查、机器可读的退出码与排障。已安装的副本位于：</p>
     <div class="code"><button type="button">复制</button><pre>"$HOME/Applications/DailyDisk.app/Contents/Helpers/dailydiskctl" status</pre></div>
     <p>常用子命令：</p>
     <div class="code"><button type="button">复制</button><pre>dailydiskctl status
@@ -269,42 +301,45 @@ dailydiskctl history --limit 14
 dailydiskctl report
 dailydiskctl verify
 dailydiskctl diagnostics</pre></div>
-    <p>默认不输出路径。需要路径排名或可还原的 JSON 时，必须显式同意：</p>
+    <p>默认不输出路径。需要路径排名或可还原的 JSON 时须显式同意：</p>
     <div class="code"><button type="button">复制</button><pre>dailydiskctl report --include-paths
 dailydiskctl report --include-paths --json</pre></div>
 
     <h2 id="update">更新</h2>
-    <p>拉取新版本后，用<strong>相同的签名变量</strong>加 <code>--install</code> 重新构建，然后退出并重新打开 App 以载入新版本。避免在扫描进行中替换助手。目前没有自动更新。</p>
+    <p>拉取新版本后，用<strong>相同的签名变量</strong>加 <code>--install</code> 重新构建，再退出并重新打开 App。App、后台助手与命令行工具需一起更新；不要在检查进行中替换助手。目前没有自动更新。</p>
     <div class="code"><button type="button">复制</button><pre>git pull
 CODE_SIGN_IDENTITY="你的签名身份" Scripts/build-app.sh --install</pre></div>
+    <div class="note"><p><strong>从旧版升级：</strong>新版的每日检查在 05:00。旧安装注册的可能仍是 09:00，更新后请确认计划时间。数据库会自动迁移，原有清单与历史报告保留，无需重置。</p></div>
 
     <h2 id="uninstall">卸载</h2>
     <ol class="steps">
       <li><div>打开 DailyDisk → <span class="ui">设置</span> → <span class="ui">移除每日任务</span>。</div></li>
-      <li><div>如果要删除本地历史，使用 <span class="ui">设置 → 重置历史与基线</span>。它会注销助手、确认没有写入进程后，只删除 DailyDisk 自己的数据目录。</div></li>
+      <li><div>如需删除本地历史，使用 <span class="ui">设置 → 重置历史与基线</span>。它会注销助手，确认没有写入后，只删除 DailyDisk 自己的数据目录。</div></li>
       <li><div>退出 DailyDisk，删除 <code>~/Applications/DailyDisk.app</code>。</div></li>
-      <li><div>如果系统设置中仍有条目，从「完全磁盘访问权限」和「通知」中移除 DailyDisk。</div></li>
+      <li><div>如系统设置中仍有条目，从「完全磁盘访问权限」与「通知」中移除。</div></li>
     </ol>
 
     <h2 id="limits">已知限制</h2>
     <ul>
-      <li>完全磁盘访问权限不能绕过 POSIX 权限、ACL、SIP 或签名系统卷。无法读取的子目录会被报告，并沿用上一次的清单，不会被当作删除。</li>
-      <li>FSEvents 是会合并事件的变化日志，不是审计日志。日志丢失或回绕时会触发权威的完整恢复。</li>
-      <li>两次检查之间创建又删除的文件无法还原，除非它们仍通过打开的文件描述符或快照占用空间。</li>
-      <li>APFS 克隆、共享区段、快照、元数据和可清除空间，使逐文件的精确物理占用无法计算；DailyDisk 会明确报告剩余差额。</li>
-      <li>「已删除但仍被打开」的文件大小是逻辑值，不一定等于独占的 APFS 块。</li>
-      <li>快照的大小字段是可选的，不会被盲目相加。</li>
+      <li>完全磁盘访问权限不能绕过 POSIX 权限、ACL、SIP 与签名系统卷。读不到的子目录会被报告，并沿用上一次的清单，不计为删除。</li>
+      <li>FSEvents 会合并事件，不是审计日志。日志丢失或回绕时会触发完整恢复。</li>
+      <li>两次检查之间创建又删除的文件无法还原，除非仍通过打开的文件描述符或快照占用空间。</li>
+      <li>APFS 克隆、共享区段、快照、元数据与可清除空间，使逐文件的精确物理占用无法计算；剩余差额会明确报告。</li>
+      <li>「已删除仍被打开」的文件大小是逻辑值，不一定等于独占的 APFS 块。</li>
+      <li>快照大小字段是可选的，不会被直接相加。</li>
     </ul>
 
     <h2 id="trouble">疑难排查</h2>
     <div class="tbl"><table>
       <thead><tr><th>现象</th><th>处理</th></tr></thead>
       <tbody>
-        <tr><td>找不到编译器或 SDK</td><td>安装或更新 Apple 开发者工具，确认 <code>swift --version</code> 为 6 以上、SDK 为 15 以上。</td></tr>
+        <tr><td>找不到编译器或 SDK</td><td>安装或更新 Apple 开发者工具，确认 Swift 为 6 以上、SDK 为 15 以上。</td></tr>
         <tr><td>依赖拉取失败</td><td>确认能访问 GitHub，然后重试 <code>swift package resolve</code>。</td></tr>
         <tr><td>没有签名身份</td><td>先用临时签名试用，或按「长期安装」准备本地签名身份。不要关闭签名检查。</td></tr>
-        <tr><td>更新后权限丢失</td><td>确认签名身份、Bundle ID 和安装路径都没有变，再重新授权。</td></tr>
-        <tr><td>完整扫描很慢</td><td>首次基线在约 236 万条路径的 Mac 上用了 23–24 分钟，属于正常范围；耗时受文件数量、改动量和磁盘速度影响。</td></tr>
+        <tr><td>更新后权限丢失</td><td>确认签名身份、Bundle ID 与安装路径未变，再重新授权。</td></tr>
+        <tr><td>升级后仍在 09:00 运行</td><td>App、助手与计划任务需一起更新。重新构建安装后确认注册的时间为 05:00。</td></tr>
+        <tr><td>完整检查耗时</td><td>在一台约 232 万条路径的 Mac 上，每日完整检查约 8 分 41 秒；首次建立基线需要更久。耗时受文件数量、改动量与磁盘速度影响。</td></tr>
+        <tr><td>数据库占用过大</td><td>使用 <a href="#reclaim">回收数据库空间</a>，确保有足够的临时空间。</td></tr>
       </tbody>
     </table></div>
 

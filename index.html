@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>DailyDisk</title>
-<meta name="description" content="DailyDisk 是一款 macOS 磁盘增长监视器：每天比对内置 APFS 磁盘的清单，告诉你多出来的空间去了哪里。">
+<meta name="description" content="DailyDisk 是一款 macOS 磁盘增长监视器。每天清晨完整清点一次内置磁盘，告诉你新增的空间去了哪里。">
 <meta property="og:title" content="DailyDisk">
 <meta property="og:description" content="看见每一天的增长。macOS 磁盘增长监视器，从源码构建。">
 <meta property="og:image" content="assets/og.jpg">
@@ -143,15 +143,11 @@ section { position: relative; }
 
 /* watch cards */
 .watch { padding-block: clamp(60px, 10vw, 120px); }
-.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.card { border-radius: 18px; overflow: hidden; background: var(--bg-raised); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform 0.7s var(--ease), opacity 0.7s var(--ease), border-color 0.3s; min-width: 0; }
-.card:hover { border-color: var(--line-strong); }
-.card figure { margin: 0; aspect-ratio: 800 / 360; overflow: hidden; background: #000; }
-.card figure img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); transition: transform 1.4s var(--ease); }
-.card:hover figure img { transform: scale(1.09); }
-.card .body { padding: 18px 20px 22px; display: grid; gap: 8px; }
-.card h3 { font-size: 18px; letter-spacing: 0.06em; }
-.card p { color: var(--ink-2); font-size: 14px; line-height: 1.65; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+.card { background: var(--bg); padding: 28px 24px 32px; display: grid; gap: 10px; align-content: start; min-width: 0; transition: background 0.3s; }
+.card:hover { background: var(--bg-raised); }
+.card h3 { font-size: 19px; letter-spacing: 0.06em; }
+.card p { color: var(--ink-2); font-size: 14px; line-height: 1.7; }
 .card .tag { font: 400 10.5px/1.4 var(--mono); letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase; }
 .foot-note { margin-top: 28px; color: var(--ink-3); font-size: 13px; max-width: 46em; }
 
@@ -287,7 +283,7 @@ footer a:hover { color: var(--ink); }
       <img class="icon load" src="assets/icon-512.png" alt="DailyDisk 图标">
       <p class="eyebrow load d1">DailyDisk · macOS 磁盘增长监视器</p>
       <h1 class="load d1" style="margin-top:18px"><span class="sprinkle" id="sprinkle">看见每一天的增长。</span></h1>
-      <p class="lede load d2">磁盘空间不会凭空消失。DailyDisk 每天比对你 Mac 内置 APFS 磁盘的完整清单，告诉你多出来的空间去了哪里。</p>
+      <p class="lede load d2">每天清晨，DailyDisk 完整清点一次 Mac 的内置磁盘，告诉你新增的空间去了哪里。</p>
       <div class="ctas load d3">
         <button class="btn solid" id="watchBtn" type="button">
           <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.8v10.4L12 7z" fill="currentColor"/></svg>
@@ -319,7 +315,7 @@ footer a:hover { color: var(--ink); }
   <section class="idea">
     <div class="wrap">
       <p class="eyebrow" style="margin-bottom:28px">为什么是 DailyDisk</p>
-      <p class="big" id="idea">每一次增长，都有<em>名字</em>。DailyDisk 把新增、删除、移动、硬链接和尺寸变化归到具体路径；实在归不上去的 APFS 物理差异，就单独记下，不凭空编一个目录。</p>
+      <p class="big" id="idea">每一次增长，都有<em>名字</em>。新增、删除、移动、硬链接、尺寸变化，逐一归到路径。无法归属的 APFS 差异，另起一栏。</p>
     </div>
   </section>
 
@@ -328,8 +324,8 @@ footer a:hover { color: var(--ink); }
     <div class="wrap">
       <div class="head rv">
         <p class="eyebrow">逐日账本</p>
-        <h2>昨天到今天，<br>每一笔都记着。</h2>
-        <p class="lede">每次检查都会生成一份报告：哪些路径长大了，哪些变小了，哪些只是换了位置。点「立即检查」开始，关掉窗口也不会中断。</p>
+        <h2>昨天到今天，<br>一笔一笔。</h2>
+        <p class="lede">每次检查生成一份报告，列出变大、释放和移动的路径。窗口可以随时关闭，检查照常进行。</p>
       </div>
       <div class="ledger-grid">
         <div class="ledger rv">
@@ -346,18 +342,18 @@ footer a:hover { color: var(--ink); }
             <div class="row zero"><span class="v">±0 B</span><span class="p">~/Projects/atlas → ~/Archive/atlas</span><span class="k">移动</span></div>
             <div class="row up"><span class="v">+96 MB</span><span class="p">DailyDisk · 数据库 · 报告 · 日志</span><span class="k">自身开销</span></div>
             <div class="row aside"><span class="v">+2.30 GB</span><span class="p">APFS 物理差异 · 无法安全归属到路径</span><span class="k">单独记录</span></div>
-            <div class="row aside"><span class="v">−18 MB</span><span class="p">对账修正 · 带符号保存</span><span class="k">七天滚动对账</span></div>
+            <div class="row aside"><span class="v">−18 MB</span><span class="p">对账修正 · 带符号保存</span><span class="k">每日完整检查</span></div>
           </div>
-          <p class="sample">示例数据 · 实际报告中路径默认隐藏，需在当前会话中主动显示</p>
+          <p class="sample">示例数据 · 实际报告默认隐藏路径</p>
         </div>
         <aside class="formula rv">
-          <p class="eyebrow">记账方式</p>
+          <p class="eyebrow">空间构成</p>
           <p class="eq">物理变化 <b>=</b> 净文件变化 <b>+</b> 未归属的 APFS 差异 <b>+</b> DailyDisk 自身开销</p>
-          <p>三部分分开记，互不混淆。完整对账发现的偏差以带符号的修正值保存：正值是增量扫描漏记的字节，负值是索引里多留的字节。</p>
+          <p>三项分开记录。完整检查发现的偏差带符号保存，多记与漏记各自可查。</p>
           <div class="legend">
-            <span><i style="background:var(--plus)"></i>增长归到具体路径</span>
-            <span><i style="background:var(--minus)"></i>减少同样入账</span>
-            <span><i style="background:var(--ink-3)"></i>归不上去的，单独一栏</span>
+            <span><i style="background:var(--plus)"></i>增长，归到路径</span>
+            <span><i style="background:var(--minus)"></i>释放，同样入账</span>
+            <span><i style="background:var(--ink-3)"></i>无法归属，单列</span>
           </div>
         </aside>
       </div>
@@ -369,19 +365,19 @@ footer a:hover { color: var(--ink); }
     <div class="wrap">
       <div class="head rv">
         <p class="eyebrow">监控范围</p>
-        <h2>它每天看着的八件事</h2>
+        <h2>它看着的八件事</h2>
       </div>
-      <div class="cards" id="cards">
-        <article class="card"><figure><img src="assets/watch-1.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Files</span><h3>文件的来去</h3><p>新增、删除、移动、硬链接、尺寸变化，逐一入账。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-2.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">FSEvents</span><h3>持久变化日志</h3><p>从系统的 FSEvents 持久日志读取历史变化，只处理动过的部分。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-3.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">APFS container</span><h3>容器与卷角色</h3><p>System、Data、VM、Preboot、Recovery、Update 六种角色都有卷级指标。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-4.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Reconciliation</span><h3>七天一次完整对账</h3><p>增量检查之外，至少每七个滚动日做一次完整清点，校正累积误差。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-5.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Held open</span><h3>删了却还占着的文件</h3><p>已删除但仍被进程打开的文件，照样看得见。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-6.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Snapshots</span><h3>快照与容器容量</h3><p>记录 APFS 快照成员关系和整个容器的容量变化。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-7.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Inventory root</span><h3>唯一的完整清点根</h3><p><code style="font:400 13px var(--mono)">/System/Volumes/Data</code> 是启动盘上唯一被完整清点的范围。</p></div></article>
-        <article class="card"><figure><img src="assets/watch-8.jpg" alt="" loading="lazy"></figure><div class="body"><span class="tag">Overhead</span><h3>自己的开销</h3><p>DailyDisk 的数据库、报告和日志占了多少，也单独记账。</p></div></article>
+      <div class="cards rv" id="cards">
+        <article class="card"><span class="tag">Files</span><h3>文件的来去</h3><p>新增、删除、移动、硬链接、尺寸变化。</p></article>
+        <article class="card"><span class="tag">FSEvents</span><h3>变化日志</h3><p>补上扫描期间的改动，支撑当天的增量检查。</p></article>
+        <article class="card"><span class="tag">APFS</span><h3>容器与卷角色</h3><p>System、Data、VM、Preboot、Recovery、Update，各有卷级指标。</p></article>
+        <article class="card"><span class="tag">05:00</span><h3>每日完整检查</h3><p>清晨完整清点一次。当天已完成，就不再重复。</p></article>
+        <article class="card"><span class="tag">Held open</span><h3>删了仍占用</h3><p>已删除、仍被进程打开的文件。</p></article>
+        <article class="card"><span class="tag">Snapshots</span><h3>快照与容量</h3><p>APFS 快照成员关系与容器容量。</p></article>
+        <article class="card"><span class="tag">Inventory</span><h3>唯一的清点范围</h3><p><code style="font:400 13px var(--mono)">/System/Volumes/Data</code></p></article>
+        <article class="card"><span class="tag">Overhead</span><h3>自身占用</h3><p>数据库、报告与日志单独入账，可在设置中回收。</p></article>
       </div>
-      <p class="foot-note rv">外置、可移除、网络和磁盘映像存储默认不纳入。密封的系统卷等不做清点的角色，仍以卷级指标显示。</p>
+      <p class="foot-note rv">外置、可移除、网络与磁盘映像默认不纳入。密封的系统卷只显示卷级指标。</p>
     </div>
   </section>
 
@@ -390,20 +386,20 @@ footer a:hover { color: var(--ink); }
     <div class="wrap">
       <div class="head rv">
         <p class="eyebrow">工作原理</p>
-        <h2>一天里发生的事</h2>
+        <h2>清晨五点，一次清点</h2>
       </div>
       <div class="daily-grid">
         <div class="dial-wrap">
           <div class="dial"><canvas id="dial" width="880" height="880" aria-hidden="true"></canvas>
-            <div class="readout"><span class="big" id="dialBig">09:00</span><span class="small" id="dialSmall">每日自动运行</span></div>
+            <div class="readout"><span class="big" id="dialBig">05:00</span><span class="small" id="dialSmall">完整清点</span></div>
           </div>
         </div>
         <ol class="steps" id="steps">
-          <li data-big="09:00" data-small="每日自动运行"><span class="n">定时唤起</span><h3>每天 09:00，自己开始</h3><p>内置的用户级 LaunchAgent 每天 09:00 运行，登录时也会补查漏掉的一次。跑完即退出，不常驻后台。</p></li>
-          <li data-big="FSEvents" data-small="回放持久日志"><span class="n">读取变化</span><h3>回放持久日志</h3><p>从 FSEvents 持久日志读取上次以来的变化，只处理动过的路径。日志丢失或被替换时，自动转为完整恢复。</p></li>
-          <li data-big="Data" data-small="更新清点"><span class="n">更新清单</span><h3>更新这份清单</h3><p>以 <code>/System/Volumes/Data</code> 为唯一的完整清点根，把新增、删除、移动、硬链接和尺寸变化逐一记入。</p></li>
-          <li data-big="7 天" data-small="滚动完整对账"><span class="n">归属与对账</span><h3>归属增长，定期对账</h3><p>增长归到具体路径；归不上去的 APFS 物理差异单独记录。距上次完整清点满 168 小时，就做一次完整对账。</p></li>
-          <li data-big="报告" data-small="写入历史"><span class="n">发布报告</span><h3>写下报告，必要时提醒</h3><p>报告以 JSON 和 Markdown 成对原子写入，在「历史」里按日期查看。超过阈值才发通知，通知只含总字节数。</p></li>
+          <li data-big="05:00" data-small="完整清点"><span class="n">开始</span><h3>清晨，完整清点</h3><p>05:00 读取全部文件元数据。登录时也会检查待办，当天已完成则跳过。运行结束即退出。</p></li>
+          <li data-big="E0 → E1" data-small="扫描期间"><span class="n">补上变化</span><h3>补上扫描中的改动</h3><p>清点时同步记录 FSEvents，扫描期间的改动一并计入，不依赖前一天的日志。</p></li>
+          <li data-big="Δ" data-small="只写变化"><span class="n">比对</span><h3>只写下变了的部分</h3><p>与当前清单逐批比对，只保存变化。未变的文件不重写，旧值保留 24 小时以备恢复。</p></li>
+          <li data-big="核对" data-small="已删除的文件"><span class="n">核对删除</span><h3>核对已删除的文件</h3><p>遍历结束后确认哪些文件已经消失。读不到的目录沿用上一次的记录。</p></li>
+          <li data-big="报告" data-small="写入历史"><span class="n">发布</span><h3>写下报告</h3><p>报告以 JSON 与 Markdown 成对保存，在「历史」中查看。超过阈值才通知，通知只含总字节数。</p></li>
         </ol>
       </div>
     </div>
@@ -414,14 +410,14 @@ footer a:hover { color: var(--ink); }
     <div class="wrap">
       <div class="head rv">
         <p class="eyebrow">实测数据</p>
-        <h2>首次慢一点，之后很快。</h2>
+        <h2>每天全量，依然轻快。</h2>
       </div>
       <div class="stats rv" id="stats">
-        <div class="stat"><span class="fig" data-to="236" data-dec="0">236<small>万条路径</small></span><p>首次建立基线约 23–24 分钟。它是期初余额，不会被算作一天的增长。</p></div>
-        <div class="stat"><span class="fig" data-to="17" data-dec="0">17<small>秒</small></span><p>一次小规模的增量检查。</p></div>
-        <div class="stat"><span class="fig" data-to="2.50" data-dec="2" data-fmt="ms">2′50″</span><p>第二天早上的检查，包含隔夜变化的扫描与报告发布。</p></div>
+        <div class="stat"><span class="fig" data-kind="ms" data-to="521">8′41″</span><p>一次完整检查，约 232 万条路径。此前约 20 分钟。</p></div>
+        <div class="stat"><span class="fig" data-kind="pct" data-to="92">−92%</span><p>单次写入 1.29 GB，此前 16.39 GB。</p></div>
+        <div class="stat"><span class="fig" data-kind="int" data-to="17">17<small>秒</small></span><p>当天再次检查，走增量。</p></div>
       </div>
-      <p class="caveat rv">以上是 2026 年 9 月 23 日在一台 Apple Silicon Mac 上的本地测量，不是性能承诺。文件数量、改动量、权限和磁盘速度都会影响耗时。数百万文件的清单本身可能占用数 GB，这部分会作为 DailyDisk 自身开销单独记账。</p>
+      <p class="caveat rv">2026 年 10 月在一台 Apple Silicon Mac 上的实测。两次运行的改动量与缓存状态不同，数字仅供参考。首次建立基线需要完整构建，耗时更长。</p>
     </div>
   </section>
 
@@ -433,10 +429,10 @@ footer a:hover { color: var(--ink); }
         <h2>数据只留在这台 Mac 上。</h2>
       </div>
       <div class="priv-grid rv">
-        <div><h3>不联网</h3><p>安装后的监视器不发出任何应用网络请求。没有遥测，不用云存储。</p></div>
-        <div><h3>不要管理员权限</h3><p>不需要 root helper、sudo 或 LaunchDaemon，只用一个用户级 LaunchAgent。</p></div>
-        <div><h3>路径默认隐藏</h3><p>显示路径只在当前会话有效；导出含完整路径的 JSON 还要再确认一次。</p></div>
-        <div><h3>通知不带路径</h3><p>通知只包含总字节数，从不包含完整路径。日志对敏感字符串做了哈希。</p></div>
+        <div><h3>不联网</h3><p>监视器不发出网络请求。没有遥测，不用云存储。</p></div>
+        <div><h3>无需管理员权限</h3><p>不用 root、sudo 或 LaunchDaemon，只有一个用户级 LaunchAgent。</p></div>
+        <div><h3>路径默认隐藏</h3><p>显示路径仅限当前会话，导出完整 JSON 需再次确认。</p></div>
+        <div><h3>通知不含路径</h3><p>通知只给总字节数。日志中的敏感字符串经过哈希。</p></div>
       </div>
       <p class="path rv">~/Library/Application Support/DailyDisk/ &nbsp;·&nbsp; DailyDisk.sqlite &nbsp;·&nbsp; Reports/ &nbsp;·&nbsp; Logs/</p>
     </div>
@@ -470,7 +466,7 @@ cd DailyDisk
 <span class="c"># 3. 构建、签名并安装到 ~/Applications</span>
 ALLOW_ADHOC_SIGNING=1 Scripts/build-app.sh --install
 open "$HOME/Applications/DailyDisk.app"</pre>
-        <p class="term-note">临时签名适合试用；重新构建后可能需要重新授予「完全磁盘访问权限」。长期使用请准备本地代码签名身份，见 <a href="docs.html#install">用户文档 · 安装</a>。这是源码发行版，不是经过公证的安装包，暂无自动更新。</p>
+        <p class="term-note">临时签名仅供试用，重新构建后可能需要重新授予「完全磁盘访问权限」。长期使用请准备本地签名身份，见 <a href="docs.html#install">用户文档 · 安装</a>。当前为源码发行，没有公证安装包，也没有自动更新。</p>
       </div>
     </div>
     <div class="install-space"></div>
@@ -528,7 +524,6 @@ open "$HOME/Applications/DailyDisk.app"</pre>
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
   const hideBelow = el => { if (!reduce && el.getBoundingClientRect().top > innerHeight) { el.classList.add('pre'); io.observe(el); } };
   document.querySelectorAll('.rv').forEach(hideBelow);
-  document.querySelectorAll('.card').forEach((c, i) => { c.style.transitionDelay = (i % 4) * 80 + 'ms'; hideBelow(c); });
 
   /* ledger rows + net counter */
   const rows = $('#rows'), net = $('#net');
@@ -547,15 +542,15 @@ open "$HOME/Applications/DailyDisk.app"</pre>
   const stats = $('#stats');
   if (!reduce && stats.getBoundingClientRect().top > innerHeight) {
     const figs = [...stats.querySelectorAll('.fig')];
-    const render = (f, x) => { const small = f.querySelector('small');
-      if (f.dataset.fmt === 'ms') { const s = Math.round(x * 60 + (x >= 2.5 ? 20 : 0)); f.textContent = `${Math.floor(s / 60)}′${String(s % 60).padStart(2, '0')}″`; }
-      else { f.firstChild.nodeValue = Math.round(x).toString(); if (small) f.append(small); } };
-    figs.forEach(f => { if (f.dataset.fmt === 'ms') f.textContent = '0′00″'; else f.firstChild.nodeValue = '0'; });
+    const show = (f, x) => { const k = f.dataset.kind, small = f.querySelector('small');
+      if (k === 'ms') { const v = Math.round(x); f.textContent = `${Math.floor(v / 60)}′${String(v % 60).padStart(2, '0')}″`; }
+      else if (k === 'pct') f.textContent = `−${Math.round(x)}%`;
+      else { f.firstChild.nodeValue = String(Math.round(x)); if (small) f.append(small); } };
+    figs.forEach(f => show(f, 0));
     new IntersectionObserver(([e], o) => {
       if (!e.isIntersecting) return; o.disconnect(); const t0 = performance.now();
       (function tick(now) { const k = clamp((now - t0) / 1600), e3 = 1 - Math.pow(1 - k, 3);
-        figs.forEach(f => { const to = +f.dataset.to; if (f.dataset.fmt === 'ms') { const s = Math.round(170 * e3); f.textContent = `${Math.floor(s / 60)}′${String(s % 60).padStart(2, '0')}″`; } else render(f, to * e3); });
-        if (k < 1) requestAnimationFrame(tick); })(t0);
+        figs.forEach(f => show(f, +f.dataset.to * e3)); if (k < 1) requestAnimationFrame(tick); })(t0);
     }, { threshold: 0.4 }).observe(stats);
   }
 
@@ -574,17 +569,19 @@ open "$HOME/Applications/DailyDisk.app"</pre>
     const S = dc.width, c = S / 2, R = S * 0.44; dx.clearRect(0, 0, S, S);
     // track
     dx.lineWidth = 2; dx.strokeStyle = 'rgba(237,235,230,0.12)'; dx.beginPath(); dx.arc(c, c, R, 0, Math.PI * 2); dx.stroke();
-    // 7 day marks + minor ticks
-    for (let i = 0; i < 168; i++) { const a = -Math.PI / 2 + i / 168 * Math.PI * 2, major = i % 24 === 0;
-      const r0 = R - (major ? 34 : 14), r1 = R - 4; dx.strokeStyle = major ? 'rgba(237,235,230,0.7)' : 'rgba(237,235,230,0.14)'; dx.lineWidth = major ? 3 : 1.5;
+    // 24-hour ring, 00 at the top
+    const H = h => -Math.PI / 2 + h / 24 * Math.PI * 2;
+    for (let i = 0; i < 96; i++) { const a = H(i / 4), major = i % 4 === 0, six = i % 24 === 0;
+      const r0 = R - (six ? 34 : major ? 20 : 10), r1 = R - 4; dx.strokeStyle = six ? 'rgba(237,235,230,0.7)' : major ? 'rgba(237,235,230,0.32)' : 'rgba(237,235,230,0.1)'; dx.lineWidth = six ? 3 : major ? 2 : 1.2;
       dx.beginPath(); dx.moveTo(c + Math.cos(a) * r0, c + Math.sin(a) * r0); dx.lineTo(c + Math.cos(a) * r1, c + Math.sin(a) * r1); dx.stroke(); }
-    dx.font = '400 24px ' + getComputedStyle(document.body).getPropertyValue('--mono'); dx.fillStyle = 'rgba(237,235,230,0.45)'; dx.textAlign = 'center'; dx.textBaseline = 'middle';
-    for (let d = 0; d < 7; d++) { const a = -Math.PI / 2 + d / 7 * Math.PI * 2; dx.fillText('D' + (d + 1), c + Math.cos(a) * (R - 64), c + Math.sin(a) * (R - 64)); }
-    // lit arc (progress through the week) with glow
-    const end = -Math.PI / 2 + p * Math.PI * 2;
+    dx.font = '400 24px ' + getComputedStyle(document.body).getPropertyValue('--mono'); dx.textAlign = 'center'; dx.textBaseline = 'middle';
+    [0, 6, 12, 18].forEach(h => { dx.fillStyle = 'rgba(237,235,230,0.45)'; dx.fillText(String(h).padStart(2, '0'), c + Math.cos(H(h)) * (R - 66), c + Math.sin(H(h)) * (R - 66)); });
+    dx.fillStyle = '#ff8a4c'; dx.fillText('05', c + Math.cos(H(5)) * (R - 66), c + Math.sin(H(5)) * (R - 66));
+    // lit arc from 05:00 onward, with glow
+    const start = H(5), end = start + p * Math.PI * 2;
     const g = dx.createLinearGradient(0, 0, S, S); g.addColorStop(0, '#7d9bff'); g.addColorStop(1, '#ff8a4c');
     dx.save(); dx.shadowColor = 'rgba(90,130,255,0.8)'; dx.shadowBlur = 30; dx.lineCap = 'round'; dx.lineWidth = 5; dx.strokeStyle = g;
-    dx.beginPath(); dx.arc(c, c, R, -Math.PI / 2, end); dx.stroke(); dx.restore();
+    dx.beginPath(); dx.arc(c, c, R, start, end); dx.stroke(); dx.restore();
     // head
     dx.save(); dx.shadowColor = '#fff'; dx.shadowBlur = 24; dx.fillStyle = '#fff'; dx.beginPath(); dx.arc(c + Math.cos(end) * R, c + Math.sin(end) * R, 9, 0, Math.PI * 2); dx.fill(); dx.restore();
   }
@@ -614,7 +611,7 @@ open "$HOME/Applications/DailyDisk.app"</pre>
     let idx = 0; steps.forEach((s, k) => { const r = s.getBoundingClientRect(); if (r.top < vh * 0.55) idx = k; });
     setStep(idx);
     const first = steps[0].getBoundingClientRect(), last = steps[steps.length - 1].getBoundingClientRect();
-    dialTarget = clamp((vh * 0.55 - first.top) / Math.max(1, last.top - first.top)) * (6 / 7) + 1 / 7 * 0.35;
+    dialTarget = 0.02 + clamp((vh * 0.55 - first.top) / Math.max(1, last.top - first.top)) * 0.96;
     ticking = false;
   }
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
@@ -641,11 +638,11 @@ open "$HOME/Applications/DailyDisk.app"</pre>
       S('<circle cx="12" cy="12" r="9" fill="#C8955C"/><g stroke="#8a5a2b" stroke-width="1"><circle cx="12" cy="12" r="6.9"/><circle cx="12.3" cy="11.8" r="4.8"/><circle cx="12.4" cy="11.7" r="2.6"/></g><path d="M12 3a9 9 0 0 1 9 9" stroke="#FFD9A0" stroke-width="1.4" stroke-linecap="round"/>', 'bare'),
       S('<g stroke="#A6DBFF" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.6 4.6 12 6.6l2.4-2M9.6 19.4 12 17.4l2.4 2"/></g>'),
       S('<path d="M12 2.8c1.1 3.6 5.2 5.6 5.2 10.2a5.2 5.2 0 0 1-10.4 0c0-2.5 1.3-3.7 2.3-4.9.2 1.6.9 2.6 1.8 3.1.2-3.3.5-5.7 1.1-8.4z" fill="#FF8A4C"/><path d="M12 13c.9 1.3 2.3 2 2.3 3.7a2.3 2.3 0 0 1-4.6 0c0-1.4.9-2.2 2.3-3.7z" fill="#FFD27A"/>'),
-      S('<circle cx="12" cy="12" r="9" fill="#EDEBE6"/><path d="M12 12V6.2M12 12H7.8" stroke="#111" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="12" r="1.1" fill="#D2412A"/>'),
+      S('<circle cx="12" cy="12" r="9" fill="#EDEBE6"/><path d="M12 12V6.2M12 12l2.1 3.6" stroke="#111" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="12" r="1.1" fill="#D2412A"/>'),
       S('<circle cx="10.5" cy="10.5" r="6" stroke="#EDEBE6" stroke-width="2" fill="rgba(125,155,255,.28)"/><path d="M15 15l5 5" stroke="#EDEBE6" stroke-width="2.4" stroke-linecap="round"/>'),
       S('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="#7D9BFF" stroke-width="2" stroke-linecap="round"/>'),
       S('<rect x="3" y="5" width="18" height="14" rx="2.5" fill="#15181e" stroke="#3a3f4a"/><path d="M7 10l3 2-3 2M12 15h5" stroke="#33D993" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'),
-      P('+4.21 GB', 'var(--plus)'), P('−640 MB', 'var(--minus)'), P('+812 MB', 'var(--plus)'), P('±0 B', 'var(--ink-2)'), P('09:00', 'var(--ink)'), P('+1.37 GB', 'var(--plus)'),
+      P('+4.21 GB', 'var(--plus)'), P('−640 MB', 'var(--minus)'), P('+812 MB', 'var(--plus)'), P('±0 B', 'var(--ink-2)'), P('05:00', 'var(--ink)'), P('+1.37 GB', 'var(--plus)'),
     ];
     let bag = [], last = null, alive = [];
     const next = () => { if (!bag.length) { bag = ITEMS.map((_, i) => i); for (let i = bag.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [bag[i], bag[j]] = [bag[j], bag[i]]; } } return ITEMS[bag.pop()]; };
