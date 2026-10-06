@@ -1,7 +1,3 @@
-<!--
-  官网尚未上线：下面的 https://dailydisk.app 是预留域名占位，上线后全局替换即可。
--->
-
 <div align="center">
 
 <img src="assets/icon-512.png" width="148" alt="DailyDisk 图标">
@@ -23,14 +19,12 @@
 
 <p>
   <a href="https://github.com/Nu1sance/DailyDisk/releases/latest"><b>⬇️ 下载</b></a> ·
-  <a href="https://dailydisk.app"><b>🌐 官网</b></a> ·
+  <a href="https://dailydisk.xhao01.chatgpt.site"><b>🌐 官网</b></a> ·
   <a href="#-安装"><b>🚀 安装</b></a> ·
   <a href="#-更新"><b>🔄 更新</b></a> ·
   <a href="#-工作原理"><b>🧠 工作原理</b></a> ·
   <a href="#-文档"><b>📚 文档</b></a>
 </p>
-
-<sub>🌐 官网即将上线 · Website coming soon</sub>
 
 </div>
 
@@ -355,7 +349,7 @@ Tests/                  Core / Store / Platform / App / CLI / 集成 / 性能
 
 | 文档 | 内容 |
 | --- | --- |
-| [用户文档](docs.html) | 下载与 Homebrew 安装、首次设置、日常使用、读懂报告、更新、卸载与排障（中文） |
+| [用户文档](https://dailydisk.xhao01.chatgpt.site/docs) | 下载与 Homebrew 安装、首次设置、日常使用、读懂报告、更新、卸载与排障（中文） |
 | [Installation](https://github.com/Nu1sance/DailyDisk/blob/main/Docs/Installation.md) | 源码安装、签名、Sparkle 更新与安装位置 |
 | [Homebrew](https://github.com/Nu1sance/DailyDisk/blob/main/Docs/Homebrew.md) | Homebrew 安装、升级、卸载与中断恢复 |
 | [Architecture](https://github.com/Nu1sance/DailyDisk/blob/main/Docs/Architecture.md) | 子系统划分与扫描边界设计 |
@@ -370,5 +364,5 @@ Tests/                  Core / Store / Platform / App / CLI / 集成 / 性能
 DailyDisk 采用 [MIT License](https://github.com/Nu1sance/DailyDisk/blob/main/LICENSE) 发布。
 
 <div align="center">
-<sub>为想知道“空间都去哪儿了”的 Mac 用户而做 · <a href="https://github.com/Nu1sance/DailyDisk/releases/latest">下载</a> · <a href="https://dailydisk.app">dailydisk.app</a>（即将上线）</sub>
+<sub>为想知道“空间都去哪儿了”的 Mac 用户而做 · <a href="https://github.com/Nu1sance/DailyDisk/releases/latest">下载</a> · <a href="https://dailydisk.xhao01.chatgpt.site">官网</a></sub>
 </div>
