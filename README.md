@@ -1,6 +1,5 @@
 <!--
   官网尚未上线：下面的 https://dailydisk.app 是预留域名占位，上线后全局替换即可。
-  宣传片：assets/dailydisk-film.mp4（30 秒，1080p）。
 -->
 
 <div align="center">
@@ -25,7 +24,6 @@
 <p>
   <a href="https://github.com/Nu1sance/DailyDisk/releases/latest"><b>⬇️ 下载</b></a> ·
   <a href="https://dailydisk.app"><b>🌐 官网</b></a> ·
-  <a href="assets/dailydisk-film.mp4"><b>🎬 宣传片</b></a> ·
   <a href="#-安装"><b>🚀 安装</b></a> ·
   <a href="#-更新"><b>🔄 更新</b></a> ·
   <a href="#-工作原理"><b>🧠 工作原理</b></a> ·
@@ -33,15 +31,6 @@
 </p>
 
 <sub>🌐 官网即将上线 · Website coming soon</sub>
-
-<br>
-
-<a href="assets/dailydisk-film.mp4">
-  <img src="assets/film-cover.jpg" width="860" alt="观看 DailyDisk 30 秒宣传片">
-</a>
-
-<sub>“空间，不会凭空消失。它只是在某个角落。每一次增长，都有名字。”<br>
-30 秒 · 1080p · 画面与配乐均由代码实时生成 · <a href="assets/dailydisk-film.mp4">▶ 观看完整影片（MP4，13 MB）</a></sub>
 
 </div>
 
