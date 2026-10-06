@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>DailyDisk</title>
-<meta name="description" content="DailyDisk 是一款 macOS 磁盘增长监视器。每天清晨完整清点一次内置磁盘，告诉你新增的空间去了哪里。">
+<meta name="description" content="DailyDisk 是一款 macOS 磁盘增长监视器。每天清晨完整清点一次内置磁盘，告诉你新增的空间去了哪里。经 Apple 公证，支持应用内更新与 Homebrew 安装。">
 <meta property="og:title" content="DailyDisk">
-<meta property="og:description" content="看见每一天的增长。macOS 磁盘增长监视器，从源码构建。">
+<meta property="og:description" content="看见每一天的增长。macOS 磁盘增长监视器，经 Apple 公证，可直接下载或用 Homebrew 安装。">
 <meta property="og:image" content="assets/og.jpg">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/icon-128.png">
@@ -79,6 +79,8 @@ section { position: relative; }
 .hero h1 { font-size: clamp(40px, 7.2vw, 88px); line-height: 1.12; letter-spacing: 0.06em; font-weight: 300; }
 .hero .lede { margin: 22px auto 0; }
 .hero .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
+.badge-line { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 0; margin-top: 22px; font: 400 11.5px/1.4 var(--mono); letter-spacing: 0.12em; color: var(--ink-3); text-transform: uppercase; }
+.badge-line span + span::before { content: "·"; padding-inline: 14px; opacity: 0.7; }
 .load { animation: rise 1.2s var(--ease) both; }
 .load.d1 { animation-delay: 0.1s; } .load.d2 { animation-delay: 0.22s; } .load.d3 { animation-delay: 0.34s; }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
@@ -167,7 +169,7 @@ section { position: relative; }
 .steps li .n::before { content: counter(s, decimal-leading-zero) "  ·  "; color: var(--ink-3); }
 .steps h3 { font-size: clamp(22px, 2.6vw, 30px); letter-spacing: 0.05em; }
 .steps p { color: var(--ink-2); max-width: 30em; }
-.steps code, .privacy code, .lede code { font: 400 0.88em/1 var(--mono); color: var(--ink); background: rgba(237, 235, 230, 0.07); padding: 0.15em 0.4em; border-radius: 5px; }
+.steps code, .privacy code, .lede code, .term-note code { font: 400 0.88em/1 var(--mono); color: var(--ink); background: rgba(237, 235, 230, 0.07); padding: 0.15em 0.4em; border-radius: 5px; }
 
 /* numbers */
 .numbers { padding-block: clamp(60px, 10vw, 120px); border-top: 1px solid var(--line); }
@@ -199,6 +201,13 @@ section { position: relative; }
 .term { width: 100%; max-width: 760px; margin-top: 26px; text-align: left; background: rgba(15, 17, 21, 0.86); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .term-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px 10px 18px; border-bottom: 1px solid var(--line); font: 400 12px/1 var(--mono); color: var(--ink-3); }
 .term pre { margin: 0; padding: 18px; overflow-x: auto; font: 400 13px/1.9 var(--mono); color: var(--ink); }
+.term pre[hidden], .term-note[hidden] { display: none; }
+.tabs { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.tab { white-space: nowrap; flex: none; height: 30px; padding: 0 12px; border-radius: 8px; border: 0; background: transparent; color: var(--ink-3); font: 500 12.5px/1 var(--sans); cursor: pointer; transition: background 0.2s, color 0.2s; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: rgba(237, 235, 230, 0.09); color: var(--ink); }
+.dl-meta { text-wrap: balance; font: 400 12px/1.6 var(--mono); color: var(--ink-3); letter-spacing: 0.06em; }
+.upd-cmd { font: 400 13px/1.6 var(--mono); color: var(--ink); background: rgba(237, 235, 230, 0.06); border-radius: 8px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; }
 .term pre .c { color: var(--ink-3); }
 .term-note { padding: 0 18px 16px; font-size: 13px; color: var(--ink-3); line-height: 1.6; }
 .term-note a { color: var(--ink-2); }
@@ -250,6 +259,8 @@ footer a:hover { color: var(--ink); }
 }
 @media (max-width: 520px) {
   .cards { grid-template-columns: minmax(0, 1fr); }
+  .term-top { padding-left: 8px; }
+  .tab { padding: 0 9px; font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -270,9 +281,10 @@ footer a:hover { color: var(--ink); }
       <li><a href="#watch">功能</a></li>
       <li><a href="#daily">原理</a></li>
       <li><a href="#privacy">隐私</a></li>
+      <li><a href="#update">更新</a></li>
       <li><a href="docs.html">文档</a></li>
     </ul>
-    <a class="btn small solid" href="#install">获取 DailyDisk</a>
+    <a class="btn small solid" href="#install">下载 DailyDisk</a>
   </div>
 </header>
 
@@ -289,8 +301,12 @@ footer a:hover { color: var(--ink); }
           <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.8v10.4L12 7z" fill="currentColor"/></svg>
           有声观看影片 <span style="opacity:.55;font-family:var(--mono);font-size:12px">0:30</span>
         </button>
-        <a class="btn" href="#install">从源码构建</a>
+        <a class="btn" href="#install">
+          <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5v8M3.5 6.2 7 9.7l3.5-3.5M2 12.5h10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          下载 <span style="opacity:.55;font-family:var(--mono);font-size:12px">0.2.2</span>
+        </a>
       </div>
+      <p class="badge-line load d3"><span>Apple 公证</span><span>Apple Silicon</span><span>macOS 15+</span><span>Homebrew</span><span>应用内更新</span></p>
     </div>
     <div class="film load d3">
       <div class="film-frame" id="frame">
@@ -429,12 +445,29 @@ footer a:hover { color: var(--ink); }
         <h2>数据只留在这台 Mac 上。</h2>
       </div>
       <div class="priv-grid rv">
-        <div><h3>不联网</h3><p>监视器不发出网络请求。没有遥测，不用云存储。</p></div>
-        <div><h3>无需管理员权限</h3><p>不用 root、sudo 或 LaunchDaemon，只有一个用户级 LaunchAgent。</p></div>
+        <div><h3>扫描不联网</h3><p>检查磁盘不发出任何网络请求，只有你点击「检查更新…」时才连接更新源。没有遥测，不用云存储。</p></div>
+        <div><h3>无需管理员权限</h3><p>不用 root、sudo 或 LaunchDaemon，只有一个用户级 LaunchAgent。Homebrew 安装同样不需要 sudo。</p></div>
         <div><h3>路径默认隐藏</h3><p>显示路径仅限当前会话，导出完整 JSON 需再次确认。</p></div>
         <div><h3>通知不含路径</h3><p>通知只给总字节数。日志中的敏感字符串经过哈希。</p></div>
       </div>
       <p class="path rv">~/Library/Application Support/DailyDisk/ &nbsp;·&nbsp; DailyDisk.sqlite &nbsp;·&nbsp; Reports/ &nbsp;·&nbsp; Logs/</p>
+    </div>
+  </section>
+
+  <!-- update -->
+  <section class="privacy" id="update">
+    <div class="wrap">
+      <div class="head rv">
+        <p class="eyebrow">保持最新</p>
+        <h2>更新，不丢一天的历史。</h2>
+        <p class="lede">新版本在应用里一键安装。基线、报告和每日任务都会原样保留，不需要重新建立。</p>
+      </div>
+      <div class="priv-grid rv">
+        <div><h3>应用内更新</h3><p>在「设置 → 软件更新」或应用菜单中点击「检查更新…」。只在你点击时检查，不在后台自动下载。</p></div>
+        <div><h3>安装时暂停扫描</h3><p>开始安装前会确认没有检查在运行，暂停扫描并暂时移除每日任务。新版本启动后恢复原来的设置。</p></div>
+        <div><h3>历史留在原处</h3><p>更新只替换当前位置的应用。数据库与报告仍保存在本机原来的目录，不重置，也不重新建立基线。</p></div>
+        <div><h3>也可以用 Homebrew</h3><p>替换前在「高级操作」中暂停运行并退出，升级后重新打开，点击「恢复运行」。</p><p class="upd-cmd">brew upgrade --cask nu1sance/tap/dailydisk</p></div>
+      </div>
     </div>
   </section>
 
@@ -443,30 +476,48 @@ footer a:hover { color: var(--ink); }
     <div class="horizon" id="installHorizon"></div>
     <div class="wrap inner">
       <img class="icon rv" src="assets/icon-512.png" alt="">
-      <h2 class="rv">从源码构建，<br>装进你的 Mac。</h2>
-      <div class="reqs rv"><span>macOS 15 或更高</span><span>内置 APFS 启动盘</span><span>Swift 6+ 命令行工具</span><span>无需 Homebrew</span></div>
+      <h2 class="rv">装进你的 Mac。</h2>
+      <div class="reqs rv"><span>macOS 15 或更高</span><span>Apple Silicon</span><span>内置 APFS 启动盘</span><span>已通过 Apple 公证</span></div>
       <div class="ctas rv">
-        <a class="btn solid" id="dlSource" href="https://github.com/Nu1sance/DailyDisk" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0z"/></svg>
-          在 GitHub 获取源码
-        </a>
-        <a class="btn" id="dlZip" href="https://github.com/Nu1sance/DailyDisk/archive/refs/heads/main.zip">
+        <a class="btn solid" id="dlRelease" href="https://github.com/Nu1sance/DailyDisk/releases/latest" target="_blank" rel="noopener">
           <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5v8M3.5 6.2 7 9.7l3.5-3.5M2 12.5h10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          下载源码 ZIP
+          下载最新正式版
+        </a>
+        <a class="btn" id="dlSource" href="https://github.com/Nu1sance/DailyDisk" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0z"/></svg>
+          GitHub
         </a>
         <a class="btn" href="docs.html">阅读用户文档</a>
       </div>
+      <p class="dl-meta rv">DailyDisk 0.2.2（构建 17）· DMG / ZIP · MIT 开源</p>
       <div class="term rv">
-        <div class="term-top"><span>终端 · 一次性试用安装</span><button class="btn small" id="copyBtn" type="button">复制</button></div>
-<pre id="cmds"><span class="c"># 1. 安装 Apple 命令行工具（已安装可跳过）</span>
+        <div class="term-top">
+          <div class="tabs" role="tablist" aria-label="安装方式">
+            <button class="tab" role="tab" type="button" id="tab-dl" aria-selected="true" aria-controls="cmds-dl">下载安装</button>
+            <button class="tab" role="tab" type="button" id="tab-brew" aria-selected="false" aria-controls="cmds-brew">Homebrew</button>
+            <button class="tab" role="tab" type="button" id="tab-src" aria-selected="false" aria-controls="cmds-src">从源码构建</button>
+          </div>
+          <button class="btn small" id="copyBtn" type="button">复制</button>
+        </div>
+<pre id="cmds-dl" role="tabpanel" aria-labelledby="tab-dl"><span class="c"># 1. 从 GitHub Releases 下载 Apple Silicon 安装包（DMG 或 ZIP）</span>
+open https://github.com/Nu1sance/DailyDisk/releases/latest
+<span class="c"># 2. 把 DailyDisk 拖进「应用程序」，然后打开</span>
+open /Applications/DailyDisk.app</pre>
+<pre id="cmds-brew" role="tabpanel" aria-labelledby="tab-brew" hidden><span class="c"># 安装（默认装到 /Applications）</span>
+brew install --cask nu1sance/tap/dailydisk
+<span class="c"># 之后升级</span>
+brew upgrade --cask nu1sance/tap/dailydisk</pre>
+<pre id="cmds-src" role="tabpanel" aria-labelledby="tab-src" hidden><span class="c"># 1. 安装 Apple 命令行工具（已安装可跳过）</span>
 xcode-select --install
 <span class="c"># 2. 获取源码</span>
 git clone https://github.com/Nu1sance/DailyDisk.git
 cd DailyDisk
-<span class="c"># 3. 构建、签名并安装到 ~/Applications</span>
+<span class="c"># 3. 构建并安装到 /Applications（试用签名；加 --user 则装到 ~/Applications）</span>
 ALLOW_ADHOC_SIGNING=1 Scripts/build-app.sh --install
-open "$HOME/Applications/DailyDisk.app"</pre>
-        <p class="term-note">临时签名仅供试用，重新构建后可能需要重新授予「完全磁盘访问权限」。长期使用请准备本地签名身份，见 <a href="docs.html#install">用户文档 · 安装</a>。当前为源码发行，没有公证安装包，也没有自动更新。</p>
+open /Applications/DailyDisk.app</pre>
+        <p class="term-note" data-for="cmds-dl">正式版已签名并通过 Apple 公证，首次打开时 macOS 仍可能请你确认来源。请只保留一份日常使用的应用；之后用「检查更新…」升级即可。</p>
+        <p class="term-note" data-for="cmds-brew" hidden>没有 /Applications 写入权限时追加 <code>--appdir="$HOME/Applications"</code>，不要用 sudo。替换或卸载已有应用前，先在「高级操作」中暂停运行并退出。卸载会保留历史数据。<a href="https://github.com/Nu1sance/DailyDisk/blob/main/Docs/Homebrew.md" target="_blank" rel="noopener">详细说明</a></p>
+        <p class="term-note" data-for="cmds-src" hidden>试用签名仅供体验，重新构建后可能需要重新授予「完全磁盘访问权限」。长期使用需要 Apple 签发、带 Team ID 的签名身份，见 <a href="docs.html#install-source">用户文档 · 从源码构建</a>。源码构建默认不启用应用内更新。</p>
       </div>
     </div>
     <div class="install-space"></div>
@@ -477,6 +528,7 @@ open "$HOME/Applications/DailyDisk.app"</pre>
   <div class="wrap">
     <span>DailyDisk · MIT License</span>
     <nav>
+      <a href="https://github.com/Nu1sance/DailyDisk/releases/latest" target="_blank" rel="noopener">下载</a>
       <a href="docs.html">用户文档</a>
       <a href="https://github.com/Nu1sance/DailyDisk" target="_blank" rel="noopener">GitHub</a>
       <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">技术文档</a>
@@ -730,11 +782,27 @@ open "$HOME/Applications/DailyDisk.app"</pre>
     title.addEventListener('pointerdown', e => { glyphs.wave(); for (let i = 0; i < 7; i++) { const a = rnd(0, Math.PI * 2); spawn(e.clientX, e.clientY, Math.cos(a), Math.sin(a)); } });
   })();
 
-  /* copy commands */
+  /* install tabs */
+  const tabs = [...document.querySelectorAll('.tab')];
+  let activePre = $('#cmds-dl');
+  const selectTab = t => {
+    tabs.forEach(b => { const on = b === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1;
+      document.getElementById(b.getAttribute('aria-controls')).hidden = !on; });
+    activePre = document.getElementById(t.getAttribute('aria-controls'));
+    document.querySelectorAll('.term-note[data-for]').forEach(n => n.hidden = n.dataset.for !== activePre.id);
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => selectTab(t));
+    t.addEventListener('keydown', e => { if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; selectTab(n); n.focus(); });
+  });
+  selectTab(tabs[0]);
+
+  /* copy commands of the active tab */
   $('#copyBtn').onclick = async e => {
-    const b = e.currentTarget, text = $('#cmds').innerText.split('\n').filter(l => !l.startsWith('#')).join('\n');
+    const b = e.currentTarget, text = activePre.innerText.split('\n').filter(l => !l.startsWith('#')).join('\n');
     try { await navigator.clipboard.writeText(text); b.textContent = '已复制'; }
-    catch { const r = document.createRange(); r.selectNodeContents($('#cmds')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = '已选中，按 ⌘C'; }
+    catch { const r = document.createRange(); r.selectNodeContents(activePre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = '已选中，按 ⌘C'; }
     setTimeout(() => b.textContent = '复制', 1800);
   };
 })();

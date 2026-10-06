@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>DailyDisk 用户文档</title>
-<meta name="description" content="DailyDisk 的安装、首次设置、每日完整检查、报告解读、回收自身占用、隐私、命令行与卸载说明。">
+<meta name="description" content="DailyDisk 的下载与 Homebrew 安装、首次设置、每日完整检查、报告解读、应用内更新、回收自身占用、隐私、命令行与卸载说明。">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/icon-128.png">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
@@ -108,6 +108,7 @@ footer a { color: var(--ink-2); text-decoration: none; }
     <a class="brand" href="index.html"><img src="assets/icon-128.png" alt="">DailyDisk<span>用户文档</span></a>
     <div class="links">
       <a class="btn" href="index.html">返回首页</a>
+      <a class="btn" href="https://github.com/Nu1sance/DailyDisk/releases/latest" target="_blank" rel="noopener">下载</a>
       <a class="btn solid" href="https://github.com/Nu1sance/DailyDisk" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
@@ -137,11 +138,11 @@ footer a { color: var(--ink-2); text-decoration: none; }
     <div class="intro">
       <span class="eyebrow">DAILYDISK · 用户文档</span>
       <h1>安装、设置与日常使用</h1>
-      <p>从构建安装到读懂报告的完整流程。架构、数据库与记账细节见仓库的 <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">Docs 目录</a>。</p>
+      <p>从下载安装、日常使用到更新与卸载的完整流程。当前正式版为 0.2.2（构建 17）。架构、数据库与记账细节见仓库的 <a href="https://github.com/Nu1sance/DailyDisk/tree/main/Docs" target="_blank" rel="noopener">Docs 目录</a>。</p>
     </div>
 
     <h2 id="overview">概述</h2>
-    <p>DailyDisk 是一款以图形界面为主、从源码构建的 macOS 磁盘增长监视器。它每天清晨完整清点一次内置 APFS 磁盘，与上一次的清单比较，把文件变化归到具体路径。无法安全归属的 APFS 物理差异单独记录。</p>
+    <p>DailyDisk 是一款以图形界面为主的 macOS 磁盘增长监视器，提供经 Apple 公证的 Apple Silicon 安装包，也可以通过 Homebrew 安装或从源码构建。它每天清晨完整清点一次内置 APFS 磁盘，与上一次的清单比较，把文件变化归到具体路径。无法安全归属的 APFS 物理差异单独记录。</p>
     <p>监视范围：</p>
     <ul>
       <li>内置 APFS 容器，以及 System、Data、VM、Preboot、Recovery、Update 各角色的卷</li>
@@ -160,51 +161,56 @@ footer a { color: var(--ink-2); text-decoration: none; }
       <thead><tr><th>项目</th><th>要求</th></tr></thead>
       <tbody>
         <tr><td>系统</td><td>macOS 15 或更高，内置 APFS 启动盘</td></tr>
-        <tr><td>构建工具</td><td>Apple 命令行工具或完整 Xcode，提供 Swift 6+ 与 macOS 15+ SDK。新 Mac 通常未预装。</td></tr>
-        <tr><td>网络</td><td>首次克隆与解析 SwiftPM 依赖时需要。安装后的监视器不发出网络请求。</td></tr>
-        <tr><td>签名</td><td>试用可用临时签名；长期安装需要稳定的本地代码签名身份。</td></tr>
-        <tr><td>权限</td><td>需手动授予「完全磁盘访问权限」。</td></tr>
-        <tr><td>不需要</td><td>Homebrew、Python、Node.js、Docker 或独立数据库服务</td></tr>
+        <tr><td>处理器</td><td>正式安装包与 Homebrew 面向 Apple Silicon。Intel 机型尚未完整验证。</td></tr>
+        <tr><td>安装方式</td><td>下载 DMG / ZIP、Homebrew，或从源码构建</td></tr>
+        <tr><td>网络</td><td>下载与检查更新时需要。扫描磁盘不发出网络请求，只有点击「检查更新…」才连接更新源。</td></tr>
+        <tr><td>权限</td><td>需手动授予「完全磁盘访问权限」，并按提示允许后台运行。</td></tr>
+        <tr><td>不需要</td><td>root、sudo、LaunchDaemon、Python、Node.js、Docker 或独立数据库服务</td></tr>
       </tbody>
     </table></div>
-    <p>端到端验证在 Apple Silicon 上完成。Intel 机型与全新 Mac 的安装尚未完整验证；构建脚本只为当前架构编译。</p>
+    <p>从源码构建另需 Apple 命令行工具或完整 Xcode（Swift 6+、macOS 15+ SDK）。构建脚本只为当前架构编译，目前没有通用二进制。</p>
 
     <h2 id="install">安装</h2>
-    <p>DailyDisk 以源码形式发布，没有公证的安装包。构建脚本会编译三个可执行文件、打包、签名、校验，并安装到 <code>~/Applications</code>。</p>
+    <p>三种方式任选其一。请只保留<strong>一份</strong>日常使用的应用，不要在 <code>/Applications</code> 和 <code>~/Applications</code> 同时放两份。</p>
 
-    <h3>1. 安装并检查开发者工具</h3>
-    <div class="code"><button type="button">复制</button><pre>xcode-select --install</pre></div>
-    <p>安装完成后，在新的终端窗口中检查：</p>
-    <div class="code"><button type="button">复制</button><pre>swift --version
+    <h3 id="install-download">方式一：下载安装包（推荐）</h3>
+    <ol class="steps">
+      <li><div>从 <a href="https://github.com/Nu1sance/DailyDisk/releases/latest" target="_blank" rel="noopener">GitHub Releases 最新正式版</a> 下载 Apple Silicon 安装包（DMG 或 ZIP）。</div></li>
+      <li><div>把 DailyDisk 拖进「应用程序」文件夹，然后打开。</div></li>
+      <li><div>正式版已签名并通过 Apple 公证，首次打开时 macOS 仍可能请你确认下载来源，参见 <a href="https://support.apple.com/102445" target="_blank" rel="noopener">Apple 的说明</a>。</div></li>
+    </ol>
+    <p>已安装测试版的用户无需重新下载，直接在 App 中「检查更新…」即可升级到正式版。</p>
+
+    <h3 id="install-brew">方式二：Homebrew</h3>
+    <div class="code"><button type="button">复制</button><pre>brew install --cask nu1sance/tap/dailydisk</pre></div>
+    <p>默认安装到 <code>/Applications</code>。没有写入权限时可改装到用户目录，<strong>不要使用 sudo</strong>：</p>
+    <div class="code"><button type="button">复制</button><pre>brew install --cask nu1sance/tap/dailydisk --appdir="$HOME/Applications"</pre></div>
+    <div class="note"><p><strong>已经装有 DailyDisk？</strong>用 Homebrew 替换前，先等检查结束，在 <span class="ui">设置 → 通用 → 高级操作</span> 点击 <span class="ui">暂停运行以手动替换应用</span> 并退出 App；完成后重新打开，点击 <span class="ui">恢复运行</span>。首次安装无需这一步。</p></div>
+    <p>Tap 位于 <a href="https://github.com/Nu1sance/homebrew-tap" target="_blank" rel="noopener">Nu1sance/homebrew-tap</a>，首个版本为 0.2.2（构建 17）。暂不支持自定义 Homebrew 前缀与 <code>brew bundle</code>。</p>
+
+    <h3 id="install-source">方式三：从源码构建</h3>
+    <p>构建脚本会编译三个可执行文件、嵌入更新框架、打包、签名、校验，并安装到 <code>/Applications</code>；加 <code>--user</code> 则装到 <code>~/Applications</code>。</p>
+    <div class="code"><button type="button">复制</button><pre><span class="c"># 1. 安装并检查开发者工具</span>
+xcode-select --install
+swift --version
 xcrun --sdk macosx --show-sdk-version
-git --version</pre></div>
-
-    <h3>2. 获取源码</h3>
-    <div class="code"><button type="button">复制</button><pre>git clone https://github.com/Nu1sance/DailyDisk.git
+<span class="c"># 2. 获取源码</span>
+git clone https://github.com/Nu1sance/DailyDisk.git
 cd DailyDisk</pre></div>
-    <p>后续命令都在此目录运行。也可以 <a href="https://github.com/Nu1sance/DailyDisk/archive/refs/heads/main.zip">下载源码 ZIP</a>。首次构建会自动拉取依赖，耗时较长。</p>
-
-    <h3>3a. 一次性试用（临时签名）</h3>
+    <p><strong>一次性试用（临时签名）：</strong></p>
     <div class="code"><button type="button">复制</button><pre>ALLOW_ADHOC_SIGNING=1 Scripts/build-app.sh --install
-open "$HOME/Applications/DailyDisk.app"</pre></div>
+open /Applications/DailyDisk.app</pre></div>
     <div class="note"><p><strong>临时签名仅供试用。</strong>重新构建后，已授予的完全磁盘访问权限或通知权限可能失效。</p></div>
-
-    <h3>3b. 长期安装（使用自己的签名身份）</h3>
-    <p>先列出钥匙串中有效的代码签名身份。身份由证书和私钥组成，构建脚本不会代为创建。</p>
-    <div class="code"><button type="button">复制</button><pre>security find-identity -v -p codesigning</pre></div>
-    <p>使用 Apple 开发身份：</p>
-    <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="Apple Development: Your Name (TEAMID)" \
-  Scripts/build-app.sh --install
-open "$HOME/Applications/DailyDisk.app"</pre></div>
-    <p>使用在「钥匙串访问」中自建的本地身份时，可关闭 Apple 安全时间戳：</p>
-    <div class="code"><button type="button">复制</button><pre>CODE_SIGN_IDENTITY="DailyDisk Local Signing" CODE_SIGN_TIMESTAMP=none \
+    <p><strong>长期安装：</strong>由于内嵌了更新框架，需要 Apple 签发、带 Team ID 的签名身份（例如 Apple Development 或 Developer ID Application）；不带 Team ID 的本地自签名证书已不再适用。</p>
+    <div class="code"><button type="button">复制</button><pre>security find-identity -v -p codesigning
+CODE_SIGN_IDENTITY="Apple Development: Your Name (TEAMID)" \
   Scripts/build-app.sh --install</pre></div>
-    <p>以上身份名称仅为示例，请换成 <code>security find-identity</code> 列出的名称。之后每次更新保持同一身份、默认 Bundle ID 与 <code>~/Applications/DailyDisk.app</code> 安装路径。私钥只留在本机。</p>
+    <p>身份名称仅为示例。之后每次更新保持同一身份、默认 Bundle ID 与安装路径。源码构建默认不配置更新源，<span class="ui">检查更新…</span> 会提示未配置；更新方法见 <a href="#update">更新</a>。</p>
 
     <h2 id="setup">首次设置</h2>
     <ol class="steps">
       <li><div>打开 App。<span class="ui">概览</span> 只显示一个与当前状态相符的主要操作。</div></li>
-      <li><div>如出现 <span class="ui">允许读取磁盘</span>，在 <strong>系统设置 → 隐私与安全性 → 完全磁盘访问权限</strong> 中启用 <code>~/Applications/DailyDisk.app</code>，然后退出并重新打开 App。</div></li>
+      <li><div>如出现 <span class="ui">允许读取磁盘</span>，在 <strong>系统设置 → 隐私与安全性 → 完全磁盘访问权限</strong> 中启用已安装的 DailyDisk（通常是 <code>/Applications/DailyDisk.app</code>），然后退出并重新打开 App。</div></li>
       <li><div>点击 <span class="ui">启用每日检查</span>，后台助手随即启用并开始一次检查。如需系统批准，主按钮会变为 <span class="ui">允许后台检查</span>，并打开「登录项与扩展」。</div></li>
       <li><div>使用 <span class="ui">开始首次检查</span> 或 <span class="ui">立即检查</span>。首次检查建立基线，作为期初余额；增长比较从下一次成功检查开始。</div></li>
       <li><div>通知可选，在 <span class="ui">设置 → 通用</span> 中开启。拒绝通知不影响报告保存。</div></li>
@@ -257,7 +263,8 @@ open "$HOME/Applications/DailyDisk.app"</pre></div>
     <div class="tbl"><table>
       <thead><tr><th>字段</th><th>含义</th></tr></thead>
       <tbody>
-        <tr><td><code>eventAttributedDelta</code></td><td>由文件事件归属到路径的变化</td></tr>
+        <tr><td><code>snapshotComparedDelta</code></td><td>每日完整检查与上一份清单直接比对得出的变化</td></tr>
+        <tr><td><code>eventAttributedDelta</code></td><td>由文件事件归属到路径的变化（当天的增量检查）</td></tr>
         <tr><td><code>reconciliationCorrection</code></td><td>完整检查产生的带符号修正</td></tr>
         <tr><td><code>reconciledIndexedDelta</code></td><td>修正后的索引净变化</td></tr>
         <tr><td><code>dailyDiskOverheadDelta</code></td><td>DailyDisk 自身数据的变化</td></tr>
@@ -265,7 +272,10 @@ open "$HOME/Applications/DailyDisk.app"</pre></div>
         <tr><td><code>physicalUnattributedDelta</code></td><td>无法安全归属到路径的物理差异</td></tr>
       </tbody>
     </table></div>
-    <p>修正值为正，表示完整扫描发现了增量维护漏记的字节；为负，表示索引保留了实际已不存在的字节。</p>
+    <div class="code"><pre>reconciledIndexedDelta = snapshotComparedDelta
+                       + eventAttributedDelta
+                       + reconciliationCorrection</pre></div>
+    <p>每日完整检查的差异记入 <code>snapshotComparedDelta</code>，不算作事件归属或对账误差。修正值为正，表示完整扫描发现了增量维护漏记的字节；为负，表示索引保留了实际已不存在的字节。</p>
     <p>报告以 JSON 与 Markdown 成对原子写入：</p>
     <div class="code"><button type="button">复制</button><pre>~/Library/Application Support/DailyDisk/Reports/&lt;run-uuid&gt;/</pre></div>
 
@@ -293,10 +303,12 @@ open "$HOME/Applications/DailyDisk.app"</pre></div>
     </ul>
 
     <h2 id="cli">命令行</h2>
-    <p>日常操作都能在 App 中完成。<code>dailydiskctl</code> 用于自动化、严格只读的检查、机器可读的退出码与排障。已安装的副本位于：</p>
-    <div class="code"><button type="button">复制</button><pre>"$HOME/Applications/DailyDisk.app/Contents/Helpers/dailydiskctl" status</pre></div>
+    <p>日常操作都能在 App 中完成。<code>dailydiskctl</code> 用于自动化、严格只读的检查、机器可读的退出码与排障。已安装的副本位于应用包内（装在 <code>~/Applications</code> 时相应替换路径）：</p>
+    <div class="code"><button type="button">复制</button><pre>"/Applications/DailyDisk.app/Contents/Helpers/dailydiskctl" status</pre></div>
     <p>常用子命令：</p>
-    <div class="code"><button type="button">复制</button><pre>dailydiskctl status
+    <div class="code"><button type="button">复制</button><pre>dailydiskctl version
+dailydiskctl build-number
+dailydiskctl status
 dailydiskctl history --limit 14
 dailydiskctl report
 dailydiskctl verify
@@ -306,18 +318,39 @@ dailydiskctl diagnostics</pre></div>
 dailydiskctl report --include-paths --json</pre></div>
 
     <h2 id="update">更新</h2>
-    <p>拉取新版本后，用<strong>相同的签名变量</strong>加 <code>--install</code> 重新构建，再退出并重新打开 App。App、后台助手与命令行工具需一起更新；不要在检查进行中替换助手。目前没有自动更新。</p>
-    <div class="code"><button type="button">复制</button><pre>git pull
-CODE_SIGN_IDENTITY="你的签名身份" Scripts/build-app.sh --install</pre></div>
-    <div class="note"><p><strong>从旧版升级：</strong>新版的每日检查在 05:00。旧安装注册的可能仍是 09:00，更新后请确认计划时间。数据库会自动迁移，原有清单与历史报告保留，无需重置。</p></div>
+    <h3>应用内更新（推荐）</h3>
+    <ol class="steps">
+      <li><div>在 <span class="ui">设置 → 软件更新</span> 或应用菜单中点击 <span class="ui">检查更新…</span>。只在你点击时检查，不在后台检查或自动下载。</div></li>
+      <li><div>选择安装后，DailyDisk 会先确认没有检查在运行、没有排队的请求，然后暂停扫描、记住每日任务的状态并暂时移除它。</div></li>
+      <li><div>下载完成后安装并重新打开。新版本启动时恢复原来的每日任务设置；如系统要求，再次允许后台运行。</div></li>
+    </ol>
+    <p>更新替换当前位置的应用：装在 <code>/Applications</code> 的仍在那里，装在 <code>~/Applications</code> 的也一样。数据库与历史报告保存在本机原目录，不重置，也无需重新建立基线。</p>
+    <div class="note"><p><strong>安装被中断？</strong>开始解压后安装可能在 App 外继续，扫描会保持暂停。重新打开 <span class="ui">检查更新…</span> 完成待安装的更新即可。不要手动删除 <code>Control</code> 目录中的文件。</p></div>
+    <p>有其他用户同时登录这台 Mac 时，更新会被拒绝。请先让其他用户退出登录，再重新检查更新。</p>
+
+    <h3>Homebrew 更新</h3>
+    <div class="code"><button type="button">复制</button><pre>brew update
+brew upgrade --cask nu1sance/tap/dailydisk</pre></div>
+    <p>升级前在 <span class="ui">高级操作</span> 中暂停运行并退出 App，升级后重新打开，点击 <span class="ui">恢复运行</span>。Homebrew 不会用旧版覆盖应用内已更新到的新版本。中断后退出 App，重试失败的 brew 命令即可（回执已是最新时用 <code>brew reinstall --cask nu1sance/tap/dailydisk</code>）。</p>
+
+    <h3>手动替换应用</h3>
+    <p>手动拖入新版本或从源码重新构建时：</p>
+    <ol class="steps">
+      <li><div>等检查和报告保存结束，点击 <span class="ui">设置 → 通用 → 高级操作 → 暂停运行以手动替换应用</span>，然后退出 App 和正在运行的命令行检查。</div></li>
+      <li><div>替换应用。源码构建请使用<strong>相同的签名变量</strong>：<code>git pull</code> 后运行 <code>Scripts/build-app.sh --install</code>。</div></li>
+      <li><div>重新打开 App，在 <span class="ui">设置 → 软件更新</span> 点击 <span class="ui">恢复运行</span>。无论替换成功还是放弃，都需要这一步。</div></li>
+    </ol>
+    <div class="note"><p><strong>从早期版本升级：</strong>新版每日检查在 05:00。旧安装注册的可能仍是 09:00，更新后请确认计划时间。数据库会自动迁移，原有清单与历史报告保留，无需重置。</p></div>
 
     <h2 id="uninstall">卸载</h2>
     <ol class="steps">
       <li><div>打开 DailyDisk → <span class="ui">设置</span> → <span class="ui">移除每日任务</span>。</div></li>
-      <li><div>如需删除本地历史，使用 <span class="ui">设置 → 重置历史与基线</span>。它会注销助手，确认没有写入后，只删除 DailyDisk 自己的数据目录。</div></li>
-      <li><div>退出 DailyDisk，删除 <code>~/Applications/DailyDisk.app</code>。</div></li>
+      <li><div>如需删除本地历史，使用 <span class="ui">设置 → 重置历史与基线…</span>。它会注销助手，确认没有写入后，只删除 DailyDisk 自己的数据目录。</div></li>
+      <li><div>退出 DailyDisk，删除 <code>/Applications/DailyDisk.app</code>（或你实际安装的位置）。用 Homebrew 安装的，改为运行下面的命令。</div></li>
       <li><div>如系统设置中仍有条目，从「完全磁盘访问权限」与「通知」中移除。</div></li>
     </ol>
+    <div class="code"><button type="button">复制</button><pre>brew uninstall --cask nu1sance/tap/dailydisk</pre></div>
+    <p>Homebrew 卸载只移除应用，<strong>保留</strong>历史数据。如需一并删除，请在卸载前使用「重置历史与基线…」。</p>
 
     <h2 id="limits">已知限制</h2>
     <ul>
@@ -333,10 +366,14 @@ CODE_SIGN_IDENTITY="你的签名身份" Scripts/build-app.sh --install</pre></di
     <div class="tbl"><table>
       <thead><tr><th>现象</th><th>处理</th></tr></thead>
       <tbody>
+        <tr><td>「检查更新…」不可用</td><td>源码构建默认没有配置更新源。改用正式安装包或 Homebrew，或按「手动替换应用」更新。</td></tr>
+        <tr><td>更新被拒绝</td><td>等当前检查完成后重试；有其他用户登录时，先让其退出登录。</td></tr>
+        <tr><td>更新后扫描仍暂停</td><td>重新打开「检查更新…」完成待安装的更新；手动替换后在「软件更新」中点击「恢复运行」。</td></tr>
+        <tr><td>首次打开被拦截</td><td>正式版已公证，按 macOS 提示确认来源即可。不要关闭系统的安全检查。</td></tr>
         <tr><td>找不到编译器或 SDK</td><td>安装或更新 Apple 开发者工具，确认 Swift 为 6 以上、SDK 为 15 以上。</td></tr>
         <tr><td>依赖拉取失败</td><td>确认能访问 GitHub，然后重试 <code>swift package resolve</code>。</td></tr>
-        <tr><td>没有签名身份</td><td>先用临时签名试用，或按「长期安装」准备本地签名身份。不要关闭签名检查。</td></tr>
-        <tr><td>更新后权限丢失</td><td>确认签名身份、Bundle ID 与安装路径未变，再重新授权。</td></tr>
+        <tr><td>没有签名身份</td><td>直接使用正式安装包；或先用临时签名试用。长期源码安装需要 Apple 签发、带 Team ID 的身份。不要关闭签名检查。</td></tr>
+        <tr><td>更新后权限丢失</td><td>确认只有一份应用，签名身份、Bundle ID 与安装路径未变。必要时从「完全磁盘访问权限」中移除旧条目，再添加实际安装的应用。</td></tr>
         <tr><td>升级后仍在 09:00 运行</td><td>App、助手与计划任务需一起更新。重新构建安装后确认注册的时间为 05:00。</td></tr>
         <tr><td>完整检查耗时</td><td>在一台约 232 万条路径的 Mac 上，每日完整检查约 8 分 41 秒；首次建立基线需要更久。耗时受文件数量、改动量与磁盘速度影响。</td></tr>
         <tr><td>数据库占用过大</td><td>使用 <a href="#reclaim">回收数据库空间</a>，确保有足够的临时空间。</td></tr>
